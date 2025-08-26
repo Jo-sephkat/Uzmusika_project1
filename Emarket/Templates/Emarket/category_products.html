@@ -1,0 +1,32 @@
+<!-- filepath: c:\Users\HP\Desktop\UZMARKET\ECOMMERCE\Emarket\Templates\Emarket\category_products.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ category_name }} Products</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container my-5">
+    <h2>Products in "{{ category_name }}"</h2>
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                {% if product.image %}
+                <img src="{{ product.image.url }}" class="card-img-top" style="height:200px;object-fit:cover;" alt="{{ product.name }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">{{ product.description|truncatewords:15 }}</p>
+                    <p class="card-text"><strong>Price:</strong> ${{ product.price }}</p>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>No products in this category.</p>
+        {% endfor %}
+    </div>
+    <a href="{% url 'category_list' %}" class="btn btn-secondary">Back to Categories</a>
+</div>
+</body>
+</html>

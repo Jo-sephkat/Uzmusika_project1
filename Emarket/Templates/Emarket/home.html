@@ -1,0 +1,142 @@
+
+
+{% extends 'Emarket/base.html' %}
+{% load static %}
+
+{% block title %}UZ MUSIKA - Home{% endblock %}
+
+{% block content %}
+    <!-- Search Bar -->
+    <div class="container my-4">
+        <form method="get" action="{% url 'product_list' %}">
+            <div class="input-group">
+                <input type="text" name="search" class="form-control" placeholder="Search for products..." aria-label="Search">
+                <button class="btn btn-primary" type="submit">Search</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Product Slideshow Section -->
+    <div class="container my-5">
+        <h2 class="text-center mb-4">Featured Products</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div id="productCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+                    <div class="carousel-inner">
+                        {% for product in products %}
+                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                            <div class="card product-card">
+                                <div class="card-img-container">
+                                    <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                                </div>
+                                <div class="card-body text-center">
+                                    <h3 class="card-title">{{ product.name }}</h3>
+                                    <p class="card-text">{{ product.description|truncatechars:100 }}</p>
+                                    <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-primary">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Categories Section -->
+    <div class="container my-5">
+        <h2 class="text-center mb-4">Browse Categories</h2>
+        <div class="row">
+            {% for category in categories %}
+                {% if category %}
+                    <div class="col-md-3 mb-4">
+                        <a href="{% url 'category_products' category %}" class="btn btn-outline-primary w-100">{{ category }}</a>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<style>
+    /* Custom styles for the product slideshow */
+    .product-card {
+        border: none;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        transition: transform 0.5s ease;
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    
+    .card-img-container {
+        height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background: #f8f9fa;
+    }
+    
+    .product-card img {
+        max-height: 100%;
+        width: auto;
+        object-fit: contain;
+        transition: transform 0.5s ease;
+    }
+    
+    .carousel-item {
+        padding: 20px;
+    }
+    
+    .carousel-item.active .product-card {
+        transform: scale(1.02);
+    }
+    
+    .carousel-item.active .product-card img {
+        transform: scale(1.05);
+    }
+    
+    .carousel-control-prev, .carousel-control-next {
+        width: 5%;
+        background: rgba(0,0,0,0.2);
+        border-radius: 50%;
+        height: 50px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    
+    .carousel-control-prev {
+        left: -25px;
+    }
+    
+    .carousel-control-next {
+        right: -25px;
+    }
+</style>
+
+<script>
+    // Optional: Add additional animations
+    document.addEventListener('DOMContentLoaded', function() {
+        const carousel = document.querySelector('#productCarousel');
+        
+        carousel.addEventListener('slide.bs.carousel', function (e) {
+            const currentItem = e.from;
+            const nextItem = e.to;
+            
+            // Animation logic can be added here if needed
+        });
+    });
+</script>
+{% endblock %}
+
+

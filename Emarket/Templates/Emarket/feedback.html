@@ -1,0 +1,15 @@
+{% extends 'Emarket/base.html' %}
+{% block content %}
+<h1>Feedback</h1>
+<form method="POST">
+    {% csrf_token %}
+    <textarea name="feedback" placeholder="Your feedback..."></textarea>
+    <button type="submit">Submit</button>
+</form>
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+{% endblock %}
+

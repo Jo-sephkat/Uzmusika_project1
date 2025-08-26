@@ -1,0 +1,99 @@
+{% extends 'Emarket/base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3>Complete Your Purchase</h3>
+                </div>
+                <div class="card-body">
+                    <h5>Order Summary</h5>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in cart_items %}
+                            <tr>
+                                <td>{{ item.product.name }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td>${{ item.product.price }}</td>
+                                <td>${{ item.total_price }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                        <h5>Total:</h5>
+                        <h5>${{ order_total }}</h5>
+                    </div>
+                    
+                    <!-- Stripe Payment Button -->
+                    <button id="checkout-button" class="btn btn-success btn-lg w-100 mt-4">
+                        Pay with Card
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stripe JS should be loaded before your script -->
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+    // Wait until DOM is fully loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        const stripe = Stripe('{{ stripe_public_key }}');
+        const checkoutButton = document.getElementById('checkout-button');
+        
+        if (checkoutButton) {
+            checkoutButton.addEventListener('click', function() {
+                fetch('/create-checkout-session/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({
+                        amount: {{ order_total }},
+                        items: [
+                            {% for item in cart_items %}
+                            {
+                                id: '{{ item.product.id }}',
+                                quantity: {{ item.quantity }},
+                                price: {{ item.product.price }},
+                                name: '{{ item.product.name }}'
+                            }{% if not forloop.last %},{% endif %}
+                            {% endfor %}
+                        ]
+                    })
+                })
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(session) {
+                    return stripe.redirectToCheckout({ sessionId: session.id });
+                })
+                .then(function(result) {
+                    if (result.error) {
+                        alert(result.error.message);
+                    }
+                })
+                .catch(function(error) {
+                    console.error('Error:', error);
+                });
+            });
+        }
+    });
+</script>
+{% endblock %}
+
+

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Categories</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .category-header {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        .category-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid #3498db;
+            margin-bottom: 10px;
+            border-radius: 0 5px 5px 0;
+        }
+        .category-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            background-color: #f1f9ff;
+        }
+        .category-link {
+            text-decoration: none;
+            color: #2980b9;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .category-link:hover {
+            color: #e74c3c;
+        }
+        .badge-custom {
+            font-size: 0.9rem;
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+        }
+        .no-categories {
+            color: #7f8c8d;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+<div class="container my-5">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="category-header text-center text-md-start">
+                <i class="bi bi-list-ul me-2"></i>Product Categories
+            </h2>
+            
+            <ul class="list-group">
+                {% for cat in categories %}
+                <li class="list-group-item category-card d-flex justify-content-between align-items-center py-3">
+                    <a href="{% url 'category_products' cat.category %}" class="category-link">
+                        <i class="bi bi-tag-fill me-2"></i>{{ cat.category }}
+                    </a>
+                    <span class="badge badge-custom rounded-pill px-3 py-2">{{ cat.count }}</span>
+                </li>
+                {% empty %}
+                <li class="list-group-item no-categories py-3">
+                    <i class="bi bi-exclamation-circle me-2"></i>No categories found.
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+<!-- Bootstrap JS Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

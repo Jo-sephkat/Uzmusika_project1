@@ -1,0 +1,12 @@
+<!-- payment_success.html -->
+{% extends 'Emarket/base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="alert alert-success text-center">
+        <h2>Payment Successful!</h2>
+        <p>Thank you for your purchase. Your order has been received.</p>
+        <a href="{% url 'home' %}" class="btn btn-primary">Return Home</a>
+    </div>
+</div>
+{% endblock %}

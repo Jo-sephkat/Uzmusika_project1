@@ -1,0 +1,51 @@
+<!-- filepath: c:\Users\HP\Desktop\UZMARKET\ECOMMERCE\Emarket\Templates\Emarket\edit_product.html -->
+{% extends 'Emarket/base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Edit Product</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">Name:</label>
+                            <input type="text" name="name" class="form-control" value="{{ product.name }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Price:</label>
+                            <input type="number" step="0.01" name="price" class="form-control" value="{{ product.price }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Category:</label>
+                            <input type="text" name="category" class="form-control" value="{{ product.category }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description:</label>
+                            <textarea name="description" class="form-control" required>{{ product.description }}</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Current Image:</label><br>
+                            {% if product.image %}
+                                <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-width: 150px; max-height: 150px;">
+                            {% else %}
+                                <span>No image uploaded.</span>
+                            {% endif %}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Change Image:</label>
+                            <input type="file" name="image" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">Save Changes</button>
+                    </form>
+                    <a href="{% url 'vendor_products' %}" class="btn btn-link mt-3">Back to My Products</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

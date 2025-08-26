@@ -1,0 +1,78 @@
+<!-- filepath: c:\Users\HP\Desktop\UZMARKET\ECOMMERCE\Emarket\Templates\Emarket\buyer_dashboard.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Buyer Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #ff9800 0%, #fff3e0 100%);
+            min-height: 100vh;
+        }
+        .dashboard-card {
+            transition: box-shadow 0.2s;
+        }
+        .dashboard-card:hover {
+            box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+        }
+    </style>
+</head>
+<body>
+<div class="container my-5">
+    <div class="text-center mb-4">
+        <h1>Welcome, {{ user.first_name|default:user.username }}</h1>
+        <span class="badge bg-success fs-6">Role: Buyer</span>
+    </div>
+    <div class="row justify-content-center g-4">
+        <div class="col-md-4">
+            <div class="card dashboard-card h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Profile</h5>
+                    <p class="card-text">View your personal information.</p>
+                    <a href="{% url 'buyer_profile' %}" class="btn btn-outline-primary w-100">View Profile</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card dashboard-card h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Edit Profile</h5>
+                    <p class="card-text">Update your personal details.</p>
+                    <a href="{% url 'buyer_edit_profile' %}" class="btn btn-outline-warning w-100">Edit Profile</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card dashboard-card h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Browse Products</h5>
+                    <p class="card-text">Explore and shop for products.</p>
+                    <a href="{% url 'product_list' %}" class="btn btn-outline-success w-100">Browse Products</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card dashboard-card h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title">View Cart</h5>
+                    <p class="card-text">See items you want to purchase.</p>
+                    <a href="{% url 'cart' %}" class="btn btn-outline-info w-100">View Cart</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card dashboard-card h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Make Purchase</h5>
+                    <p class="card-text">Proceed to buy your selected items.</p>
+                    <a href="{% url 'make_purchase' %}" class="btn btn-outline-success w-100">Make Purchase</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="text-center mt-5">
+        <a href="{% url 'home' %}" class="btn btn-secondary">Back to Home</a>
+    </div>
+</div>
+</body>
+</html>
