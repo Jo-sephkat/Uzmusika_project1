@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "ECOMMERCE/wsgi.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/static/(.*)",
+      "dest": "Emarket/staic/$1"  
+    },
+    {
+      "src": "/(.*)",
+      "dest": "ECOMMERCE/wsgi.py"
+    }
+  ],
+  "buildCommand": "chmod +x build.sh && ./build.sh",
+  "installCommand": "pip install -r requirements.txt"
+}
+
