@@ -1,142 +1,142 @@
-
-
 {% extends 'Emarket/base.html' %}
 {% load static %}
 
-{% block title %}UZ MUSIKA - Home{% endblock %}
+{% block title %}UniTrade — The Student Marketplace for Zimbabwean Campuses{% endblock %}
 
 {% block content %}
-    <!-- Search Bar -->
-    <div class="container my-4">
-        <form method="get" action="{% url 'product_list' %}">
-            <div class="input-group">
-                <input type="text" name="search" class="form-control" placeholder="Search for products..." aria-label="Search">
-                <button class="btn btn-primary" type="submit">Search</button>
-            </div>
-        </form>
-    </div>
+<!-- Hero Section -->
+<section class="hero-cream">
+    <div class="wrap">
+        <div class="row align-items-center g-5">
+            <!-- Left Column: Copy & Stats -->
+            <div class="col-lg-6">
+                <span class="hero-eyebrow">Student Marketplace · Zimbabwe</span>
+                <h1 class="hero-heading">
+                    Everything<br>
+                    students sell,<br>
+                    <span class="hero-accent">in one campus<br>market.</span>
+                </h1>
 
-    <!-- Product Slideshow Section -->
-    <div class="container my-5">
-        <h2 class="text-center mb-4">Featured Products</h2>
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div id="productCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
-                    <div class="carousel-inner">
-                        {% for product in products %}
-                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                            <div class="card product-card">
-                                <div class="card-img-container">
-                                    <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
-                                </div>
-                                <div class="card-body text-center">
-                                    <h3 class="card-title">{{ product.name }}</h3>
-                                    <p class="card-text">{{ product.description|truncatechars:100 }}</p>
-                                    <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-primary">View Details</a>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
+                <p class="hero-desc">
+                    List a side hustle in minutes. Buyers pay with the wallets they already use — EcoCash, InnBucks, OneMoney and ZIPIT.
+                </p>
+
+                <div class="d-flex gap-3 flex-wrap align-items-center mb-2">
+                    <a href="{% url 'product_list' %}" class="btn-hero-primary">
+                        Browse the marketplace <i class="fa-solid fa-arrow-right small ms-1"></i>
+                    </a>
+                    <a href="{% url 'add_product' %}" class="btn-hero-secondary">
+                        Start selling
+                    </a>
+                </div>
+
+                <!-- Stats Row -->
+                <div class="hero-stats">
+                    <div>
+                        <div class="hero-stat-num">{{ total_unis|default:"6" }}</div>
+                        <div class="hero-stat-lbl">Universities</div>
                     </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
+                    <div>
+                        <div class="hero-stat-num">1.2k</div>
+                        <div class="hero-stat-lbl">Active listings</div>
+                    </div>
+                    <div>
+                        <div class="hero-stat-num">4</div>
+                        <div class="hero-stat-lbl">Local payment options</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Hero Image & Floating Badge -->
+            <div class="col-lg-6">
+                <div class="hero-image-wrap">
+                    <img src="{% static 'Emarket/images/campus_students_hero.jpg' %}" alt="Students on campus exchanging textbooks">
+
+                    <div class="hero-floating-badge">
+                        <div class="badge-green-sub">COLLECTED TODAY</div>
+                        <div class="badge-location">Mount Pleasant · 14 hand-overs</div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+</section>
 
-    <!-- Categories Section -->
-    <div class="container my-5">
-        <h2 class="text-center mb-4">Browse Categories</h2>
-        <div class="row">
-            {% for category in categories %}
-                {% if category %}
-                    <div class="col-md-3 mb-4">
-                        <a href="{% url 'category_products' category %}" class="btn btn-outline-primary w-100">{{ category }}</a>
-                    </div>
-                {% endif %}
+<!-- How UniTrade works -->
+{% include 'Emarket/includes/how_it_works.html' %}
+
+<!-- Shop by category -->
+<section class="sec">
+    <div class="wrap">
+        <div class="sec-h">
+            <div>
+                <div class="rule"></div>
+                <h2>Shop by category</h2>
+            </div>
+            <a href="{% url 'category_list' %}" class="sec-link">
+                See all categories
+            </a>
+        </div>
+
+        <div class="row g-4">
+            {% for cat in category_data %}
+                <div class="col-sm-6 col-lg-4">
+                    <a href="{% url 'product_list' %}?cat={{ cat.name|urlencode }}"
+                       class="card-product text-decoration-none p-4 h-100">
+                        <div class="fs-2 mb-3">{{ cat.icon }}</div>
+                        <div class="hw-card-title fs-5 mb-1">{{ cat.name }}</div>
+                        <div class="card-seller-line mb-0">{{ cat.count }} listing{{ cat.count|pluralize }}</div>
+                    </a>
+                </div>
             {% endfor %}
         </div>
     </div>
+</section>
+
+<!-- Fresh on campus -->
+<section class="sec bg-white border-top border-bottom">
+    <div class="wrap">
+        <div class="sec-h">
+            <div>
+                <div class="rule"></div>
+                <h2>Fresh on campus</h2>
+            </div>
+            <a href="{% url 'product_list' %}" class="sec-link">
+                View all listings →
+            </a>
+        </div>
+
+        <div class="row g-4">
+            {% for product in products %}
+                <div class="col-sm-6 col-lg-3">
+                    {% include 'Emarket/includes/product_card.html' %}
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <div class="empty">No listings posted yet. Be the first to start selling!</div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Payments Banner -->
+{% include 'Emarket/includes/payments_banner.html' %}
+
+<!-- Live on these campuses -->
+<section class="sec pt-0">
+    <div class="wrap">
+        <div class="rule"></div>
+        <h2 class="mb-2">Live on these campuses</h2>
+        <p class="text-muted small mb-4">Filter student listings across Zimbabwean universities:</p>
+
+        <div class="chips">
+            <a href="{% url 'product_list' %}" class="chip">All Campuses</a>
+            {% for u in universities %}
+                <a href="{% url 'product_list' %}?uni={{ u|urlencode }}" class="chip">{{ u }}</a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
 {% endblock %}
-
-{% block scripts %}
-<style>
-    /* Custom styles for the product slideshow */
-    .product-card {
-        border: none;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        transition: transform 0.5s ease;
-        background: white;
-        border-radius: 15px;
-        overflow: hidden;
-    }
-    
-    .card-img-container {
-        height: 300px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-        background: #f8f9fa;
-    }
-    
-    .product-card img {
-        max-height: 100%;
-        width: auto;
-        object-fit: contain;
-        transition: transform 0.5s ease;
-    }
-    
-    .carousel-item {
-        padding: 20px;
-    }
-    
-    .carousel-item.active .product-card {
-        transform: scale(1.02);
-    }
-    
-    .carousel-item.active .product-card img {
-        transform: scale(1.05);
-    }
-    
-    .carousel-control-prev, .carousel-control-next {
-        width: 5%;
-        background: rgba(0,0,0,0.2);
-        border-radius: 50%;
-        height: 50px;
-        top: 50%;
-        transform: translateY(-50%);
-    }
-    
-    .carousel-control-prev {
-        left: -25px;
-    }
-    
-    .carousel-control-next {
-        right: -25px;
-    }
-</style>
-
-<script>
-    // Optional: Add additional animations
-    document.addEventListener('DOMContentLoaded', function() {
-        const carousel = document.querySelector('#productCarousel');
-        
-        carousel.addEventListener('slide.bs.carousel', function (e) {
-            const currentItem = e.from;
-            const nextItem = e.to;
-            
-            // Animation logic can be added here if needed
-        });
-    });
-</script>
-{% endblock %}
-
 

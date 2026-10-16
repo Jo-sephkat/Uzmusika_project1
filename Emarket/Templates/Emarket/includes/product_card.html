@@ -1,0 +1,49 @@
+{% load static %}
+<!-- Product Card Component -->
+<div class="card-product h-100">
+    <div class="card-product-thumb">
+        {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+        {% else %}
+            <span>{{ product.display_icon }}</span>
+        {% endif %}
+    </div>
+
+    <div class="card-product-body">
+        <div class="card-cat-header">
+            <span class="card-cat-title">{{ product.category }}</span>
+            <span class="card-cond-tag">{{ product.condition }}</span>
+        </div>
+
+        <div class="card-prod-name">
+            <a href="{% url 'product_detail' product.id %}" class="text-dark text-decoration-none">
+                {{ product.name }}
+            </a>
+        </div>
+
+        <div class="card-seller-line mb-3">
+            {{ product.vendor.display_name }} · {{ product.effective_university }}
+        </div>
+
+        <!-- Footer: Price on top, Buttons below price (equal width) -->
+        <div class="card-customer-footer mt-auto pt-2">
+            <div class="customer-card-price-wrap mb-2">
+                <div class="card-price-text dynamic-card-price {% if product.price >= 100000 %}price-xxs{% elif product.price >= 10000 %}price-xs{% elif product.price >= 1000 %}price-sm{% endif %}">
+                    US${{ product.price }}
+                </div>
+            </div>
+            <div class="card-customer-btn-group d-flex gap-2 w-100">
+                <a href="{% url 'product_detail' product.id %}" class="btn btn-sm btn-o flex-fill text-center d-flex align-items-center justify-content-center py-2">
+                    View
+                </a>
+                <form method="post" action="{% url 'add_to_cart' product.id %}" class="ajax-cart-form flex-fill m-0">
+                    {% csrf_token %}
+                    <input type="hidden" name="quantity" value="1">
+                    <button type="submit" class="btn btn-sm btn-p w-100 text-center d-flex align-items-center justify-content-center py-2">
+                        Add to cart
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

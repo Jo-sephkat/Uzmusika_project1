@@ -9,7 +9,7 @@
   "routes": [
     {
       "src": "/static/(.*)",
-      "dest": "Emarket/staic/$1"  
+      "dest": "Emarket/static/$1"  
     },
     {
       "src": "/(.*)",

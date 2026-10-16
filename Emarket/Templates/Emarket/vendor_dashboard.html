@@ -1,61 +1,241 @@
-<!-- filepath: c:\Users\HP\Desktop\UZMARKET\ECOMMERCE\Emarket\Templates\Emarket\vendor_dashboard.html -->
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Vendor Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background: linear-gradient(135deg, #ff9800 0%, #fff3e0 100%);
-            min-height: 100vh;
-        }
-        .dashboard-card {
-            transition: box-shadow 0.2s;
-        }
-        .dashboard-card:hover {
-            box-shadow: 0 4px 24px rgba(0,0,0,0.15);
-        }
-    </style>
-</head>
-<body>
-<div class="container my-5">
-    <div class="text-center mb-4">
-        <h1>Welcome, {{ profile.user.username }}</h1>
-        <span class="badge bg-primary fs-6">Role: {{ profile.role }}</span>
-    </div>
-    <div class="row justify-content-center g-4">
-        <div class="col-md-4">
-            <div class="card dashboard-card h-100">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Profile</h5>
-                    <p class="card-text">View and edit your profile information.</p>
-                    <a href="{% url 'vendor_profile' %}" class="btn btn-outline-primary w-100">Go to Profile</a>
-                </div>
+{% extends 'Emarket/base.html' %}
+{% load static %}
+
+{% block title %}Vendor Dashboard — UniTrade{% endblock %}
+
+{% block content %}
+<section class="sec">
+    <div class="wrap">
+        <div class="rule"></div>
+        <div class="sec-h">
+            <div>
+                <h2><i class="fa-solid fa-chart-line me-2 text-success"></i>Vendor Dashboard</h2>
+                <p class="text-muted small mt-1">Manage your campus store listings and track incoming orders</p>
+            </div>
+            <div class="d-flex gap-2 flex-wrap">
+                <a href="{% url 'vendor_profile' %}" class="btn btn-o">
+                    <i class="fa-solid fa-id-card me-1"></i> Seller Profile
+                </a>
+                <a href="{% url 'add_product' %}" class="btn btn-p">
+                    <i class="fa-solid fa-plus-circle me-1"></i> Add new listing
+                </a>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card dashboard-card h-100">
-                <div class="card-body text-center">
-                    <h5 class="card-title">My Products</h5>
-                    <p class="card-text">Manage your products on offer.</p>
-                    <a href="{% url 'vendor_products' %}" class="btn btn-outline-success w-100">View Products</a>
+
+        <div class="row g-4">
+        <!-- MAIN CONTENT -->
+        <div class="col-12">
+
+        <!-- Metrics cards (3 columns) -->
+        <div class="row g-3 mb-4">
+
+            <div class="col-md-4">
+                <a href="{% url 'vendor_products' %}" class="panel p-4 text-decoration-none d-block h-100">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-muted small">Active listings</div>
+                            <div class="card-price-text fs-2 mb-0 text-dark">{{ total_products }}</div>
+                            <div class="small text-success mt-1 fw-semibold">Manage listings →</div>
+                        </div>
+                        <div class="rounded-circle p-3 bg-success-subtle text-success fs-4">
+                            <i class="fa-solid fa-boxes-stacked"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <div class="panel p-4 h-100">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-muted small">Incoming orders</div>
+                            <div class="card-price-text fs-2 mb-0 text-dark">{{ vendor_order_items|length }}</div>
+                            {% if pending_orders_count %}
+                                <div class="small text-warning-emphasis mt-1 fw-semibold">{{ pending_orders_count }} to confirm</div>
+                            {% else %}
+                                <div class="small text-muted mt-1">All up to date</div>
+                            {% endif %}
+                        </div>
+                        <div class="rounded-circle p-3 bg-warning-subtle text-warning-emphasis fs-4">
+                            <i class="fa-solid fa-receipt"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card dashboard-card h-100">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Add Product</h5>
-                    <p class="card-text">Add a new product to your store.</p>
-                    <a href="{% url 'add_product' %}" class="btn btn-outline-warning w-100">Add Product</a>
-                </div>
+            <div class="col-md-4">
+                <a href="{% url 'vendor_revenue' %}" class="panel p-4 text-decoration-none d-block h-100">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-muted small">Revenue earned</div>
+                            <div class="card-price-text fs-2 mb-0 text-success">US${{ total_sales_revenue|default:"0.00" }}</div>
+                            <div class="small text-success mt-1 fw-semibold">View Revenue Analytics →</div>
+                        </div>
+                        <div class="rounded-circle p-3 bg-info-subtle text-info-emphasis fs-4">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                    </div>
+                </a>
             </div>
         </div>
-        <!-- Add more cards as needed -->
+
+        <!-- Your Listings -->
+        <div class="sec-h mt-4">
+            <h4><i class="fa-solid fa-shop me-2 text-success"></i>Your Store Listings</h4>
+            <span class="text-muted small">{{ products|length }} item{{ products|length|pluralize }}</span>
+        </div>
+
+        {% if products %}
+            <div class="row g-3 mb-5">
+                {% for p in products %}
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="card-product h-100">
+                            <div class="card-product-thumb">
+                                {% if p.image %}
+                                    <img src="{{ p.image.url }}" alt="{{ p.name }}">
+                                {% else %}
+                                    <span>{{ p.display_icon }}</span>
+                                {% endif %}
+                            </div>
+                            <div class="card-product-body">
+                                <div class="card-cat-header">
+                                    <span class="card-cat-title">{{ p.category }}</span>
+                                    <span class="card-cond-tag">{{ p.condition }}</span>
+                                </div>
+                                <div class="card-prod-name">
+                                    <a href="{% url 'product_detail' p.id %}" class="text-dark text-decoration-none">{{ p.name }}</a>
+                                </div>
+                                <div class="card-seller-line mb-3">
+                                    {{ p.effective_university }}
+                                </div>
+                                <div class="card-vendor-footer mt-auto pt-2">
+                                    <div class="vendor-card-price-wrap mb-2">
+                                        <div class="card-price-text dynamic-card-price {% if p.price >= 100000 %}price-xxs{% elif p.price >= 10000 %}price-xs{% elif p.price >= 1000 %}price-sm{% endif %}">US${{ p.price }}</div>
+                                    </div>
+                                    <div class="card-vendor-btn-group d-flex gap-2 w-100">
+                                        <a href="{% url 'edit_product' p.id %}" class="btn btn-sm btn-o flex-fill text-center d-flex align-items-center justify-content-center py-2" title="Edit listing">
+                                            <i class="fa-solid fa-pen-to-square me-1"></i> Edit
+                                        </a>
+                                        <a href="{% url 'delete_product' p.id %}" class="btn btn-sm btn-danger-o flex-fill text-center d-flex align-items-center justify-content-center py-2" onclick="return confirm('Are you sure you want to remove this item?');" title="Delete listing">
+                                            <i class="fa-solid fa-trash-can me-1"></i> Delete
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="panel text-center py-5 mb-5">
+                <p class="text-muted mb-3">You have not added any campus listings yet.</p>
+                <a href="{% url 'add_product' %}" class="btn btn-p">
+                    <i class="fa-solid fa-plus-circle me-1"></i> Add your first listing
+                </a>
+            </div>
+        {% endif %}
+
+        <!-- Incoming Orders from Campus Buyers -->
+        {% if vendor_order_items %}
+            <div class="panel p-0 mb-4 overflow-hidden">
+                <div class="panel-header px-4 py-3 border-bottom d-flex align-items-center justify-content-between">
+                    <h5 class="fw-bold mb-0">
+                        <i class="fa-solid fa-bag-shopping me-2 text-success"></i>Recent Student Orders
+                        {% if pending_orders_count %}
+                            <span class="badge bg-warning text-dark ms-2 fw-semibold" style="font-size: .75rem;">{{ pending_orders_count }} to confirm</span>
+                        {% endif %}
+                    </h5>
+                    <span class="small text-muted">Click confirm when payment is received</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-4">Order Ref</th>
+                                <th>Item</th>
+                                <th>Qty</th>
+                                <th>Buyer Contact</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th class="pe-4">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in vendor_order_items %}
+                                <tr>
+                                    <td class="ps-4"><b>{{ item.order.order_reference|default:item.order.id }}</b></td>
+                                    <td>{{ item.product.name }}</td>
+                                    <td>{{ item.quantity }}</td>
+                                    <td class="small">{{ item.order.payment_number }}<br><span class="text-muted">{{ item.order.buyer.first_name|default:item.order.buyer.username }}</span></td>
+                                    <td class="fw-bold text-success">US${{ item.total_price }}</td>
+                                    <td>
+                                        {% if item.order.status == 'Pending' %}
+                                            <span class="badge bg-warning text-dark">Pending</span>
+                                        {% elif item.order.status == 'Confirmed' %}
+                                            <span class="badge bg-primary">Confirmed</span>
+                                        {% elif item.order.status == 'Completed' %}
+                                            <span class="badge bg-success">Completed</span>
+                                        {% elif item.order.status == 'Cancelled' %}
+                                            <span class="badge bg-danger">Cancelled</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ item.order.status }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-muted small">{{ item.order.date_ordered|date:"M d, Y" }}</td>
+                                    <td class="pe-4">
+                                        {% if item.order.status == 'Pending' %}
+                                            <form method="post" action="{% url 'update_order_status' item.order.id %}" class="d-inline">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="status" value="Confirmed">
+                                                <button type="submit" class="btn btn-sm btn-confirm-order" title="Confirm payment received">
+                                                    <i class="fa-solid fa-circle-check me-1"></i>Confirm <span class="badge badge-confirm">Pending</span>
+                                                </button>
+                                            </form>
+                                        {% elif item.order.status == 'Confirmed' %}
+                                            <form method="post" action="{% url 'update_order_status' item.order.id %}" class="d-inline">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="status" value="Completed">
+                                                <button type="submit" class="btn btn-sm btn-complete-order">
+                                                    <i class="fa-solid fa-check-double me-1"></i>Complete
+                                                </button>
+                                            </form>
+                                            <form method="post" action="{% url 'update_order_status' item.order.id %}" class="d-inline ms-1">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="status" value="Cancelled">
+                                                <button type="submit" class="btn btn-sm btn-danger-o" onclick="return confirm('Cancel this order?')">
+                                                    <i class="fa-solid fa-xmark"></i>
+                                                </button>
+                                            </form>
+                                        {% elif item.order.status == 'Completed' %}
+                                            <span class="text-success small"><i class="fa-solid fa-check"></i> Done</span>
+                                        {% elif item.order.status == 'Cancelled' %}
+                                            <span class="text-danger small"><i class="fa-solid fa-ban"></i></span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endif %}
+
+        </div><!-- /col-12 -->
+        </div><!-- /row -->
     </div>
-    <div class="text-center mt-5">
-        <a href="{% url 'home' %}" class="btn btn-secondary">Back to Home</a>
-    </div>
-</div>
-</body>
-</html>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.dynamic-card-price').forEach(function(el) {
+            const len = el.textContent.trim().length;
+            if (len >= 13) {
+                el.classList.add('price-xxs');
+            } else if (len >= 10) {
+                el.classList.add('price-xs');
+            } else if (len >= 8) {
+                el.classList.add('price-sm');
+            }
+        });
+    });
+</script>
+{% endblock %}

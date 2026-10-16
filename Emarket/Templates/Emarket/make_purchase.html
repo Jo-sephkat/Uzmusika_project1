@@ -1,99 +1,85 @@
 {% extends 'Emarket/base.html' %}
+{% load static %}
+
+{% block title %}Checkout — UniTrade{% endblock %}
 
 {% block content %}
-<div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h3>Complete Your Purchase</h3>
-                </div>
-                <div class="card-body">
-                    <h5>Order Summary</h5>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Product</th>
-                                <th>Quantity</th>
-                                <th>Price</th>
-                                <th>Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for item in cart_items %}
-                            <tr>
-                                <td>{{ item.product.name }}</td>
-                                <td>{{ item.quantity }}</td>
-                                <td>${{ item.product.price }}</td>
-                                <td>${{ item.total_price }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                    <hr>
-                    <div class="d-flex justify-content-between">
-                        <h5>Total:</h5>
-                        <h5>${{ order_total }}</h5>
+<section class="sec">
+    <div class="wrap" style="max-width: 680px;">
+        <div class="rule"></div>
+        <h2 class="mb-4"><i class="fa-solid fa-lock me-2 text-success"></i>Campus Checkout</h2>
+
+        <!-- Order Total Panel -->
+        <div class="panel mb-4 p-4 d-flex justify-content-between align-items-center">
+            <div>
+                <div style="font-size: .85rem; color: var(--g500); margin-bottom: .2rem;">Order total ({{ cart_items|length }} item{{ cart_items|length|pluralize }})</div>
+                <div class="cprice fs-2 mb-0">US${{ order_total }}</div>
+            </div>
+            <a href="{% url 'cart' %}" class="btn btn-sm btn-o">
+                <i class="fa-solid fa-pen-to-square me-1"></i> Edit Cart
+            </a>
+        </div>
+
+        <form method="post" action="{% url 'make_purchase' %}">
+            {% csrf_token %}
+
+            <h4 class="mb-3 fw-bold"><i class="fa-solid fa-wallet me-2 text-success"></i>Choose how to pay</h4>
+            
+            <div class="d-flex flex-column gap-2 mb-4">
+                {% for opt in payment_options %}
+                    <label class="pay {% if forloop.first %}sel{% endif %}" onclick="selectPaymentOption(this)" style="user-select: none;">
+                        <input type="radio" name="payment_method" value="{{ opt.id }}" {% if forloop.first %}checked{% endif %} class="form-check-input mt-0" style="accent-color: var(--ink);">
+                        <div class="flex-grow-1 ms-2">
+                            <div class="d-flex align-items-center gap-2">
+                                <b>{{ opt.name }}</b>
+                                <span class="badge" style="background: var(--champ-l); color: var(--ink); border: 1px solid var(--champ-b); font-size: .7rem;">
+                                    {{ opt.tag }}
+                                </span>
+                            </div>
+                            <small>{{ opt.note }}</small>
+                        </div>
+                    </label>
+                {% endfor %}
+            </div>
+
+            <div class="panel p-4 mb-4">
+                <h5 class="fw-bold mb-3"><i class="fa-solid fa-address-card me-2 text-success"></i>Buyer & Contact Details</h5>
+                
+                {% if not user.is_authenticated %}
+                    <div class="field mb-3">
+                        <label>Your Full Name</label>
+                        <input type="text" name="buyer_name" placeholder="e.g. Tendai Chikwanha" required>
                     </div>
-                    
-                    <!-- Stripe Payment Button -->
-                    <button id="checkout-button" class="btn btn-success btn-lg w-100 mt-4">
-                        Pay with Card
-                    </button>
+                    <div class="field mb-3">
+                        <label>Your Student Email or WhatsApp</label>
+                        <input type="text" name="buyer_contact" placeholder="e.g. tendai@uz.ac.zw or 077 123 4567" required>
+                    </div>
+                {% endif %}
+
+                <div class="field mb-0">
+                    <label>Wallet / Phone Number (for confirmation SMS)</label>
+                    <input type="text" name="payment_number" placeholder="e.g. 077 123 4567" value="{{ user.profile.phone|default:'' }}" required>
+                    <small class="text-muted mt-1 d-block">The student seller will confirm payment with this number before campus hand-over.</small>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
 
-<!-- Stripe JS should be loaded before your script -->
-<script src="https://js.stripe.com/v3/"></script>
+            <button type="submit" class="btn btn-p btn-lg w-100 py-3 shadow-sm">
+                <i class="fa-solid fa-check-circle me-2"></i> Place order (US${{ order_total }})
+            </button>
+        </form>
+    </div>
+</section>
+
 <script>
-    // Wait until DOM is fully loaded
-    document.addEventListener('DOMContentLoaded', function() {
-        const stripe = Stripe('{{ stripe_public_key }}');
-        const checkoutButton = document.getElementById('checkout-button');
-        
-        if (checkoutButton) {
-            checkoutButton.addEventListener('click', function() {
-                fetch('/create-checkout-session/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': '{{ csrf_token }}'
-                    },
-                    body: JSON.stringify({
-                        amount: {{ order_total }},
-                        items: [
-                            {% for item in cart_items %}
-                            {
-                                id: '{{ item.product.id }}',
-                                quantity: {{ item.quantity }},
-                                price: {{ item.product.price }},
-                                name: '{{ item.product.name }}'
-                            }{% if not forloop.last %},{% endif %}
-                            {% endfor %}
-                        ]
-                    })
-                })
-                .then(function(response) {
-                    return response.json();
-                })
-                .then(function(session) {
-                    return stripe.redirectToCheckout({ sessionId: session.id });
-                })
-                .then(function(result) {
-                    if (result.error) {
-                        alert(result.error.message);
-                    }
-                })
-                .catch(function(error) {
-                    console.error('Error:', error);
-                });
-            });
-        }
-    });
+    function selectPaymentOption(labelEl) {
+        document.querySelectorAll('.pay').forEach(p => {
+            p.classList.remove('sel');
+            const radio = p.querySelector('input[type="radio"]');
+            if(radio) radio.checked = false;
+        });
+        labelEl.classList.add('sel');
+        const activeRadio = labelEl.querySelector('input[type="radio"]');
+        if(activeRadio) activeRadio.checked = true;
+    }
 </script>
 {% endblock %}
-
-

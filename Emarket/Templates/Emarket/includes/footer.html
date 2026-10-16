@@ -1,0 +1,43 @@
+{% load static %}
+<footer>
+    <div class="wrap">
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <a class="brand text-decoration-none d-inline-flex mb-2" href="{% url 'home' %}" style="color:var(--champ);">
+                    <span class="ic">U</span>UniTrade
+                </a>
+                <p class="small mt-2 mb-0" style="line-height:1.6;max-width:270px;color:#94a3b8;">
+                    The student marketplace for Zimbabwean campuses. List what you no longer need, find what you do — and pay the way you already pay.
+                </p>
+            </div>
+
+            <div class="col-lg-2 col-md-6 col-6">
+                <h5>Marketplace</h5>
+                <a href="{% url 'product_list' %}"><i class="fa-solid fa-angle-right me-1 small"></i> Browse all listings</a>
+                <a href="{% url 'category_list' %}"><i class="fa-solid fa-angle-right me-1 small"></i> Categories</a>
+                <a href="{% url 'cart' %}"><i class="fa-solid fa-angle-right me-1 small"></i> Your cart</a>
+            </div>
+
+            <div class="col-lg-2 col-md-6 col-6">
+                <h5>Selling</h5>
+                <a href="{% url 'vendor_dashboard' %}"><i class="fa-solid fa-angle-right me-1 small"></i> Vendor dashboard</a>
+                <a href="{% url 'add_product' %}"><i class="fa-solid fa-angle-right me-1 small"></i> Add a listing</a>
+                <a href="{% url 'register' %}"><i class="fa-solid fa-angle-right me-1 small"></i> Become a seller</a>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <h5>Support</h5>
+                <a href="{% url 'about' %}"><i class="fa-solid fa-angle-right me-1 small"></i> About UniTrade</a>
+                <a href="{% url 'contact_us' %}"><i class="fa-solid fa-angle-right me-1 small"></i> Contact us</a>
+                <a href="{% url 'privacy_policy' %}"><i class="fa-solid fa-angle-right me-1 small"></i> Privacy policy</a>
+                <a href="{% url 'help_center' %}"><i class="fa-solid fa-angle-right me-1 small"></i> Help center</a>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between flex-wrap gap-2 mt-4 pt-3" style="border-top:1px solid rgba(255,255,255,.1);font-size:.82rem;">
+            <div>Payments by EcoCash · InnBucks · OneMoney · ZIPIT</div>
+            <div>&copy; 2026 UniTrade Zimbabwe · Campus Peer-to-Peer Marketplace</div>
+        </div>
+    </div>
+</footer>
+

@@ -1,43 +1,53 @@
-<!-- filepath: c:\Users\HP\Desktop\UZMARKET\ECOMMERCE\Emarket\Templates\Emarket\about.html -->
-<!DOCTYPE html>
-<html>
-<head>
-    <title>About Us</title>
-        <style>
-            body {
-            background-color:rgb(215, 218, 223);
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            }
-            h1{
-                color:rgb(94, 104, 202);
-                font-size: 3em:
+{% extends 'Emarket/base.html' %}
+{% load static %}
 
-            }
-            p{
-                color: #666666;
-                line-height: 1.5;
-                font-size: 1.25em;
-                border: 10px solid rgb(115 125 225);
-                padding: 10px;
-                margin: 15px;
+{% block title %}About UniTrade — Student Marketplace{% endblock %}
 
-            }
-            a {
-                color: #007BFF;
-                text-decoration: none;
+{% block content %}
+<section class="sec">
+    <div class="wrap" style="max-width: 760px;">
+        <div class="rule"></div>
+        <h2 class="mb-3"><i class="fa-solid fa-graduation-cap me-2 text-success"></i>About UniTrade</h2>
+        
+        <div class="panel p-4 p-sm-5 mb-4">
+            <p class="fs-5 fw-semibold" style="color: var(--ink);">
+                UniTrade is the dedicated student marketplace built for Zimbabwean university campuses.
+            </p>
+            <p style="line-height: 1.7; color: var(--g600);">
+                We connect student buyers and sellers across Zimbabwean campuses to trade textbooks, laptops, hostel gear, notes, tutoring sessions, food plates, and side hustles directly.
+            </p>
+            <p style="line-height: 1.7; color: var(--g600);">
+                Every transaction uses the mobile money and bank rails students already rely on every day: <strong>EcoCash, InnBucks, OneMoney, and ZIPIT</strong> — zero credit cards, zero friction, and safe on-campus meet-ups.
+            </p>
+            
+            <div class="row g-3 mt-3 pt-3 border-top">
+                <div class="col-sm-6">
+                    <h6 class="fw-bold text-dark"><i class="fa-solid fa-building-columns text-success me-1"></i> Live Campuses:</h6>
+                    <ul class="list-unstyled small text-muted">
+                        {% for u in universities %}
+                            <li><i class="fa-solid fa-check text-success me-1"></i> {{ u }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="col-sm-6">
+                    <h6 class="fw-bold text-dark"><i class="fa-solid fa-wallet text-success me-1"></i> Payment Rails:</h6>
+                    <ul class="list-unstyled small text-muted">
+                        {% for p in payment_methods %}
+                            <li><i class="fa-solid fa-check text-success me-1"></i> {{ p }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
 
-            }
-            a:hover {
-                text-decoration: underline;
-            }
-
-        </style>
-</head>
-<body>
-    <h1>ABOUT US</h1>
-    <p>Welcome to UZ MUSIKA!The only e-commerce platform for the University of Zimbabwe community.</p>
-    <p>Our mission is to provide a seamless shopping experience for students, staff, and vendors.</p>
-    <a href="{% url 'home' %}">Back to Home</a>
-</body>
-</html>
+        <div class="d-flex gap-2">
+            <a href="{% url 'product_list' %}" class="btn btn-p">
+                <i class="fa-solid fa-store me-1"></i> Browse Marketplace
+            </a>
+            <a href="{% url 'add_product' %}" class="btn btn-o">
+                <i class="fa-solid fa-plus-circle me-1"></i> Start Selling
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,12 +1,57 @@
 {% extends 'Emarket/base.html' %}
+{% load static %}
+
+{% block title %}Help Center & FAQs — UniTrade{% endblock %}
+
 {% block content %}
-<h1>Help Center</h1>
-<div class="faq-section">
-    <h3>Frequently Asked Questions</h3>
-    <div class="faq-item">
-        <h4>How do I sell an item?</h4>
-        <p>Go to your dashboard and click "List Product." Fill in details and publish!</p>
+<section class="sec">
+    <div class="wrap" style="max-width: 760px;">
+        <div class="rule"></div>
+        <h2 class="mb-2"><i class="fa-solid fa-circle-question me-2 text-success"></i>Help Center & Campus Guide</h2>
+        <p class="text-muted mb-4">Frequently asked questions about student buying, selling, and safety on Zimbabwean campuses.</p>
+
+        <div class="panel p-4 p-sm-5 shadow-sm">
+            <div class="accordion" id="faqAccordion">
+                <div class="accordion-item border-0 border-bottom mb-2">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button fw-bold text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                            <i class="fa-solid fa-book-open text-success me-2"></i> How do I sell my textbooks, room essentials, or services?
+                        </button>
+                    </h2>
+                    <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-secondary small">
+                            Register a UniTrade student account, choose your university campus, and head to <strong>Sell</strong> or your <strong>Vendor Dashboard</strong>. Set your price in US$, choose the condition, write a short description, and your listing goes live instantly!
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item border-0 border-bottom mb-2">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed fw-bold text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                            <i class="fa-solid fa-mobile-screen-button text-success me-2"></i> What payment methods can I use?
+                        </button>
+                    </h2>
+                    <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-secondary small">
+                            UniTrade supports direct local Zimbabwean payment options: <strong>EcoCash (USD wallet)</strong>, <strong>InnBucks vouchers</strong>, <strong>OneMoney</strong>, <strong>ZIPIT bank transfers</strong>, and <strong>Cash on campus</strong>.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item border-0">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed fw-bold text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                            <i class="fa-solid fa-shield-halved text-success me-2"></i> Campus Safety & Hand-over Tips
+                        </button>
+                    </h2>
+                    <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-secondary small">
+                            Always meet in well-lit, public campus hubs like university libraries, student dining halls, or department foyers. Inspect goods thoroughly before finalizing payment transfers.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <!-- Add more FAQs -->
-</div>
+</section>
 {% endblock %}

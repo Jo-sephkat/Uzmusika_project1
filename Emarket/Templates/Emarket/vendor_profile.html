@@ -1,55 +1,128 @@
-<!-- filepath: c:\Users\HP\Desktop\UZMARKET\ECOMMERCE\Emarket\Templates\Emarket\vendor_profile.html -->
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Vendor Profile</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background: linear-gradient(135deg, #ff9800 0%, #fff3e0 100%);
-            min-height: 100vh;
-        }
-        .profile-card {
-            max-width: 450px;
-            margin: 40px auto;
-            border-radius: 16px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.10);
-            background: #fff;
-        }
-        .profile-avatar {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-top: -45px;
-            border: 4px solid #fff3e0;
-            background: #ff9800;
-            color: #fff;
-            font-size: 2.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-    </style>
-</head>
-<body>
-<div class="container">
-    <div class="profile-card p-4 text-center">
-        <div class="profile-avatar mx-auto mb-3">
-            <span>{{ user.first_name|slice:":1"|default:user.username|slice:":1" }}</span>
+{% extends 'Emarket/base.html' %}
+{% load static %}
+
+{% block title %}Seller Information & Profile — UniTrade{% endblock %}
+
+{% block content %}
+<section class="sec">
+    <div class="wrap" style="max-width: 640px;">
+        <div class="rule"></div>
+
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <div>
+                <h2 class="mb-1"><i class="fa-solid fa-id-card me-2 text-success"></i>Seller Information</h2>
+                <p class="text-muted small mb-0">Verified student vendor credentials, store details, and direct contact info</p>
+            </div>
+            <a href="{% url 'vendor_dashboard' %}" class="btn btn-sm btn-o">
+                <i class="fa-solid fa-chart-line me-1"></i> Seller Dashboard
+            </a>
         </div>
-        <h3 class="mb-1">{{ user.first_name }} {{ user.last_name }}</h3>
-        <span class="badge bg-primary mb-3">Vendor</span>
-        <ul class="list-group list-group-flush text-start mb-3">
-            <li class="list-group-item"><strong>Username:</strong> {{ user.username }}</li>
-            <li class="list-group-item"><strong>Email:</strong> {{ user.email }}</li>
-            <li class="list-group-item"><strong>Role:</strong> {{ profile.role }}</li>
-            <li class="list-group-item"><strong>Contacts:</strong> {{ profile.phone }}</li>
-            <li class="list-group-item"><strong>Address:</strong> {{ profile.address }}</li>
-        </ul>
-        <a href="{% url 'vendor_edit_profile' %}" class="btn btn-warning w-100 mb-2">Edit Profile</a>
-        <a href="{% url 'vendor_dashboard' %}" class="btn btn-secondary w-100">Back to Dashboard</a>
+
+        <div class="panel p-4 p-sm-5 shadow-sm border-0 bg-white mb-4">
+            <!-- Identity Banner -->
+            <div class="text-center mb-4 pb-3 border-bottom">
+                <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold mx-auto mb-3 shadow-sm" style="width: 76px; height: 76px; font-size: 2rem; background: var(--champ); color: var(--ink);">
+                    {{ user.first_name|slice:":1"|default:user.username|slice:":1"|upper }}
+                </div>
+                <h3 class="fw-bold mb-1 text-dark">{{ profile.display_name }}</h3>
+                <div class="d-flex justify-content-center align-items-center gap-2 mb-2 flex-wrap">
+                    <span class="badge" style="background: var(--ink); color: var(--champ); font-size: .8rem; padding: 5px 12px;">
+                        <i class="fa-solid fa-circle-check me-1"></i>Verified Student Seller
+                    </span>
+                    <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size: .8rem; padding: 5px 12px;">
+                        <i class="fa-solid fa-building-columns me-1"></i>{{ profile.university }}
+                    </span>
+                </div>
+                <p class="text-muted small mb-0">Member since {{ user.date_joined|date:"F Y" }}</p>
+            </div>
+
+            <!-- Seller Details List -->
+            <h5 class="fw-bold mb-3 text-dark">
+                <i class="fa-solid fa-user me-2 text-success"></i>Seller Information Details
+            </h5>
+
+            <ul class="list-group list-group-flush mb-4">
+                <li class="list-group-item d-flex justify-content-between align-items-center py-3 bg-transparent px-0 border-bottom">
+                    <span class="text-muted"><i class="fa-solid fa-store me-2 text-success"></i> Store / Business Name</span>
+                    <span class="fw-semibold text-dark">{{ profile.store_name|default:profile.display_name }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center py-3 bg-transparent px-0 border-bottom">
+                    <span class="text-muted"><i class="fa-solid fa-user-tag me-2 text-success"></i> Seller Full Name</span>
+                    <span class="fw-semibold text-dark">{{ user.get_full_name|default:"Not specified" }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center py-3 bg-transparent px-0 border-bottom">
+                    <span class="text-muted"><i class="fa-solid fa-at me-2 text-success"></i> Student Username</span>
+                    <span class="fw-semibold text-dark">@{{ user.username }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center py-3 bg-transparent px-0 border-bottom">
+                    <span class="text-muted"><i class="fa-solid fa-envelope me-2 text-success"></i> Student Email</span>
+                    <span class="fw-semibold text-dark">{{ user.email }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center py-3 bg-transparent px-0 border-bottom">
+                    <span class="text-muted"><i class="fa-solid fa-building-columns me-2 text-success"></i> Campus University</span>
+                    <span class="fw-semibold text-dark">{{ profile.university }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center py-3 bg-transparent px-0 border-bottom">
+                    <span class="text-muted"><i class="fa-solid fa-phone me-2 text-success"></i> EcoCash / Contact Number</span>
+                    <span class="fw-semibold text-dark">{{ profile.phone|default:"Not specified" }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-start py-3 bg-transparent px-0 border-bottom">
+                    <span class="text-muted"><i class="fa-solid fa-location-dot me-2 text-success"></i> Campus Pickup Address</span>
+                    <span class="fw-semibold text-dark text-end" style="max-width: 60%;">{{ profile.address|default:"Not specified" }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center py-3 bg-transparent px-0">
+                    <span class="text-muted"><i class="fa-solid fa-shield-halved me-2 text-success"></i> Email Verification</span>
+                    <span class="badge bg-success-subtle text-success border border-success-subtle">
+                        <i class="fa-solid fa-check me-1"></i>Confirmed
+                    </span>
+                </li>
+            </ul>
+
+            <!-- Store Quick Stats -->
+            <div class="row g-2 mb-4 text-center">
+                <div class="col-4">
+                    <div class="p-3 bg-light rounded-3">
+                        <div class="text-muted small">Listings</div>
+                        <div class="fw-bold fs-5 text-dark">{{ products_count|default:"0" }}</div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="p-3 bg-light rounded-3">
+                        <div class="text-muted small">Sales</div>
+                        <div class="fw-bold fs-5 text-dark">{{ sales_count|default:"0" }}</div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="p-3 bg-light rounded-3">
+                        <div class="text-muted small">Revenue</div>
+                        <div class="fw-bold fs-5 text-success">US${{ total_revenue|default:"0.00" }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Action Buttons -->
+            <div class="d-flex gap-2 flex-wrap">
+                <a href="{% url 'vendor_edit_profile' %}" class="btn btn-p flex-grow-1">
+                    <i class="fa-solid fa-pen-to-square me-1"></i> Edit Seller Information
+                </a>
+                <a href="{% url 'account_settings' %}" class="btn btn-o">
+                    <i class="fa-solid fa-gear me-1"></i> Account Settings
+                </a>
+                <a href="{% url 'vendor_dashboard' %}" class="btn btn-o">
+                    <i class="fa-solid fa-chart-line me-1"></i> Dashboard
+                </a>
+            </div>
+        </div>
+
+        <div class="alert alert-light border rounded-3 p-3 d-flex align-items-center justify-content-between">
+            <div>
+                <i class="fa-solid fa-circle-info text-success me-2"></i>
+                <span class="small">Looking for order confirmations, inventory management, or financials?</span>
+            </div>
+            <a href="{% url 'vendor_dashboard' %}" class="btn btn-sm btn-p">
+                Go to Dashboard
+            </a>
+        </div>
     </div>
-</div>
-</body>
-</html>
+</section>
+{% endblock %}

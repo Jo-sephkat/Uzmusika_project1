@@ -1,0 +1,329 @@
+{% extends 'Emarket/base.html' %}
+{% load static %}
+
+{% block title %}Profile & Account — UniTrade{% endblock %}
+
+{% block content %}
+<section class="sec">
+    <div class="wrap" style="max-width: 680px;">
+        <div class="rule"></div>
+
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <div>
+                <h2 class="mb-1"><i class="fa-solid fa-circle-user me-2 text-success"></i>Profile & Account</h2>
+                <p class="text-muted small mb-0">Unified campus identity, user details, settings, and account control</p>
+            </div>
+            <div>
+                {% if profile.role == 'vendor' %}
+                    <a href="{% url 'vendor_dashboard' %}" class="btn btn-sm btn-p">
+                        <i class="fa-solid fa-chart-line me-1"></i> Seller Dashboard
+                    </a>
+                {% else %}
+                    <a href="{% url 'buyer_dashboard' %}" class="btn btn-sm btn-p">
+                        <i class="fa-solid fa-gauge me-1"></i> Orders Dashboard
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Identity Banner -->
+        <div class="panel p-4 mb-4 shadow-sm border-0 bg-white">
+            <div class="d-flex align-items-center gap-3">
+                <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm" style="width: 72px; height: 72px; font-size: 1.85rem; background: var(--champ); color: var(--ink); flex-shrink: 0;">
+                    {{ user.first_name|slice:":1"|default:user.username|slice:":1"|upper }}
+                </div>
+                <div class="overflow-hidden flex-grow-1">
+                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <h3 class="fw-bold mb-0 text-dark">{{ user.get_full_name|default:user.username }}</h3>
+                        {% if profile.role == 'vendor' %}
+                            <span class="badge" style="background: var(--ink); color: var(--champ); font-size: .78rem; padding: 4px 10px;">
+                                <i class="fa-solid fa-store me-1"></i>Verified Student Seller
+                            </span>
+                        {% else %}
+                            <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size: .78rem; padding: 4px 10px;">
+                                <i class="fa-solid fa-user me-1"></i>Verified Campus Buyer
+                            </span>
+                        {% endif %}
+                    </div>
+                    <div class="text-muted small mt-1">
+                        <span>@{{ user.username }}</span> · <span>{{ user.email }}</span>
+                    </div>
+                    <div class="text-muted small mt-1">
+                        <i class="fa-solid fa-building-columns me-1 text-success"></i>{{ profile.university }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Tabs -->
+        <ul class="nav nav-pills profile-nav-pills mb-4 p-1 bg-white rounded-3 shadow-sm border" id="profileTab" role="tablist">
+            <li class="nav-item flex-fill" role="presentation">
+                <button class="nav-link w-100 text-center fw-semibold {% if tab != 'settings' and tab != 'dashboard' and tab != 'logout' %}active{% endif %}" id="details-tab" data-bs-toggle="pill" data-bs-target="#tab-details" type="button" role="tab" aria-selected="{% if tab != 'settings' and tab != 'dashboard' and tab != 'logout' %}true{% else %}false{% endif %}">
+                    <i class="fa-solid fa-id-card me-1"></i> User Details
+                </button>
+            </li>
+            <li class="nav-item flex-fill" role="presentation">
+                <button class="nav-link w-100 text-center fw-semibold {% if tab == 'settings' %}active{% endif %}" id="settings-tab" data-bs-toggle="pill" data-bs-target="#tab-settings" type="button" role="tab" aria-selected="{% if tab == 'settings' %}true{% else %}false{% endif %}">
+                    <i class="fa-solid fa-gear me-1"></i> Settings
+                </button>
+            </li>
+            <li class="nav-item flex-fill" role="presentation">
+                <button class="nav-link w-100 text-center fw-semibold {% if tab == 'dashboard' %}active{% endif %}" id="dashboard-tab" data-bs-toggle="pill" data-bs-target="#tab-dashboard" type="button" role="tab" aria-selected="{% if tab == 'dashboard' %}true{% else %}false{% endif %}">
+                    <i class="fa-solid fa-chart-line me-1"></i> Dashboard
+                </button>
+            </li>
+            <li class="nav-item flex-fill" role="presentation">
+                <button class="nav-link w-100 text-center fw-semibold text-danger {% if tab == 'logout' %}active{% endif %}" id="logout-tab" data-bs-toggle="pill" data-bs-target="#tab-logout" type="button" role="tab" aria-selected="{% if tab == 'logout' %}true{% else %}false{% endif %}">
+                    <i class="fa-solid fa-arrow-right-from-bracket me-1"></i> Log Out
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tab Content Panels -->
+        <div class="tab-content" id="profileTabContent">
+
+            <!-- 1. USER DETAILS CATEGORY -->
+            <div class="tab-pane fade {% if tab != 'settings' and tab != 'dashboard' and tab != 'logout' %}show active{% endif %}" id="tab-details" role="tabpanel" aria-labelledby="details-tab">
+                <div class="panel p-4 p-sm-5 shadow-sm border-0 bg-white mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                        <h5 class="fw-bold mb-0 text-dark">
+                            <i class="fa-solid fa-id-card me-2 text-success"></i>
+                            {% if profile.role == 'vendor' %}Seller Information{% else %}Customer Information{% endif %}
+                        </h5>
+                        <button type="button" class="btn btn-sm btn-o" onclick="document.getElementById('settings-tab').click();">
+                            <i class="fa-solid fa-pen-to-square me-1"></i> Edit Details
+                        </button>
+                    </div>
+
+                    <ul class="list-group list-group-flush mb-4">
+                        {% if profile.role == 'vendor' %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center py-3 bg-transparent px-0 border-bottom">
+                                <span class="text-muted"><i class="fa-solid fa-store me-2 text-success"></i> Store / Business Name</span>
+                                <span class="fw-semibold text-dark">{{ profile.store_name|default:profile.display_name }}</span>
+                            </li>
+                        {% endif %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-3 bg-transparent px-0 border-bottom">
+                            <span class="text-muted"><i class="fa-solid fa-user-tag me-2 text-success"></i> Full Name</span>
+                            <span class="fw-semibold text-dark">{{ user.get_full_name|default:"Not specified" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-3 bg-transparent px-0 border-bottom">
+                            <span class="text-muted"><i class="fa-solid fa-at me-2 text-success"></i> Student Username</span>
+                            <span class="fw-semibold text-dark">@{{ user.username }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-3 bg-transparent px-0 border-bottom">
+                            <span class="text-muted"><i class="fa-solid fa-envelope me-2 text-success"></i> Student Email</span>
+                            <span class="fw-semibold text-dark">{{ user.email }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-3 bg-transparent px-0 border-bottom">
+                            <span class="text-muted"><i class="fa-solid fa-building-columns me-2 text-success"></i> Campus University</span>
+                            <span class="fw-semibold text-dark">{{ profile.university }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-3 bg-transparent px-0 border-bottom">
+                            <span class="text-muted"><i class="fa-solid fa-phone me-2 text-success"></i> EcoCash / Contact</span>
+                            <span class="fw-semibold text-dark">{{ profile.phone|default:"Not specified" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-start py-3 bg-transparent px-0 border-bottom">
+                            <span class="text-muted"><i class="fa-solid fa-location-dot me-2 text-success"></i> Campus Pickup Address</span>
+                            <span class="fw-semibold text-dark text-end" style="max-width: 60%;">{{ profile.address|default:"Not specified" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center py-3 bg-transparent px-0">
+                            <span class="text-muted"><i class="fa-solid fa-shield-halved me-2 text-success"></i> Account Verification</span>
+                            <span class="badge bg-success-subtle text-success border border-success-subtle">
+                                <i class="fa-solid fa-check me-1"></i>Active & Confirmed
+                            </span>
+                        </li>
+                    </ul>
+
+                    <!-- Quick Activity Glance -->
+                    {% if profile.role == 'vendor' %}
+                        <div class="row g-2 text-center pt-2">
+                            <div class="col-4">
+                                <div class="p-3 bg-light rounded-3">
+                                    <div class="text-muted small">Listings</div>
+                                    <div class="fw-bold fs-5 text-dark">{{ products_count|default:"0" }}</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="p-3 bg-light rounded-3">
+                                    <div class="text-muted small">Sales</div>
+                                    <div class="fw-bold fs-5 text-dark">{{ sales_count|default:"0" }}</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="p-3 bg-light rounded-3">
+                                    <div class="text-muted small">Revenue</div>
+                                    <div class="fw-bold fs-5 text-success">US${{ total_revenue|default:"0.00" }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="row g-2 text-center pt-2">
+                            <div class="col-6">
+                                <div class="p-3 bg-light rounded-3">
+                                    <div class="text-muted small">Orders Placed</div>
+                                    <div class="fw-bold fs-4 text-dark">{{ orders_count|default:"0" }}</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="p-3 bg-light rounded-3">
+                                    <div class="text-muted small">Items in Cart</div>
+                                    <div class="fw-bold fs-4 text-success">{{ cart_count|default:"0" }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- 2. SETTINGS CATEGORY -->
+            <div class="tab-pane fade {% if tab == 'settings' %}show active{% endif %}" id="tab-settings" role="tabpanel" aria-labelledby="settings-tab">
+                <div class="panel p-4 p-sm-5 shadow-sm border-0 bg-white mb-4">
+                    <form method="post" action="{% url 'profile' %}">
+                        {% csrf_token %}
+                        
+                        <h5 class="fw-bold mb-3 pb-2 border-bottom text-dark">
+                            <i class="fa-solid fa-user-pen me-2 text-success"></i>Name & Account Settings
+                        </h5>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6 field mb-0">
+                                <label class="fw-semibold">First Name</label>
+                                <input type="text" name="first_name" value="{{ user.first_name }}" placeholder="First name" required class="form-control">
+                            </div>
+                            <div class="col-md-6 field mb-0">
+                                <label class="fw-semibold">Last Name</label>
+                                <input type="text" name="last_name" value="{{ user.last_name }}" placeholder="Last name" required class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6 field mb-0">
+                                <label class="fw-semibold">Username <small class="text-muted fw-normal">(read-only)</small></label>
+                                <input type="text" value="{{ user.username }}" readonly class="form-control bg-light text-muted">
+                            </div>
+                            <div class="col-md-6 field mb-0">
+                                <label class="fw-semibold">Student Email</label>
+                                <input type="email" name="email" value="{{ user.email }}" required class="form-control">
+                            </div>
+                        </div>
+
+                        {% if profile.role == 'vendor' %}
+                            <div class="field mb-3">
+                                <label class="fw-semibold">Store / Business Display Name</label>
+                                <input type="text" name="store_name" value="{{ profile.store_name|default:'' }}" placeholder="e.g. Tariro's Campus Bookshop" class="form-control">
+                                <small class="text-muted">This store name appears on your marketplace product listings.</small>
+                            </div>
+                        {% endif %}
+
+                        <div class="field mb-3">
+                            <label class="fw-semibold">Campus University</label>
+                            <select name="university" required class="form-select">
+                                {% for u in universities %}
+                                    <option value="{{ u }}" {% if profile.university == u %}selected{% endif %}>{{ u }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="field mb-3">
+                            <label class="fw-semibold">Phone / WhatsApp / EcoCash Number</label>
+                            <input type="text" name="phone" value="{{ profile.phone|default:'' }}" placeholder="e.g. 077 123 4567" class="form-control">
+                            <small class="text-muted">Used for direct buyer-seller campus order confirmation & WhatsApp coordination.</small>
+                        </div>
+
+                        <div class="field mb-4">
+                            <label class="fw-semibold">Hostel / Campus Pickup Address</label>
+                            <textarea name="address" rows="3" placeholder="e.g. Complex 3, Room 42, Mount Pleasant Campus" class="form-control">{{ profile.address|default:'' }}</textarea>
+                        </div>
+
+                        <h5 class="fw-bold mb-3 pb-2 border-bottom pt-3 text-dark" id="security">
+                            <i class="fa-solid fa-lock me-2 text-success"></i>Security & Password
+                        </h5>
+                        <p class="text-muted small mb-3">Leave blank if you do not wish to change your password.</p>
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6 field mb-0">
+                                <label class="fw-semibold">New Password</label>
+                                <input type="password" name="new_password" placeholder="••••••••" class="form-control">
+                            </div>
+                            <div class="col-md-6 field mb-0">
+                                <label class="fw-semibold">Confirm New Password</label>
+                                <input type="password" name="confirm_password" placeholder="••••••••" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2 pt-2">
+                            <button type="submit" class="btn btn-p flex-grow-1 py-2 fw-bold">
+                                <i class="fa-solid fa-floppy-disk me-1"></i> Save Changes
+                            </button>
+                            <button type="button" class="btn btn-o" onclick="document.getElementById('details-tab').click();">
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 3. DASHBOARD CATEGORY -->
+            <div class="tab-pane fade {% if tab == 'dashboard' %}show active{% endif %}" id="tab-dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+                <div class="panel p-4 p-sm-5 shadow-sm border-0 bg-white mb-4">
+                    <h5 class="fw-bold mb-3 pb-2 border-bottom text-dark">
+                        <i class="fa-solid fa-chart-line me-2 text-success"></i>
+                        {% if profile.role == 'vendor' %}Seller Hub & Dashboard{% else %}Student Orders & Dashboard{% endif %}
+                    </h5>
+                    <p class="text-muted">
+                        {% if profile.role == 'vendor' %}
+                            Access your active store inventory, manage recent campus student orders, track earnings, and update listings.
+                        {% else %}
+                            View your current and previous campus orders, tracking references, payment records, and active cart.
+                        {% endif %}
+                    </p>
+
+                    <div class="d-flex gap-2 flex-wrap mt-4">
+                        {% if profile.role == 'vendor' %}
+                            <a href="{% url 'vendor_dashboard' %}" class="btn btn-p">
+                                <i class="fa-solid fa-chart-line me-1"></i> Go to Seller Dashboard
+                            </a>
+                            <a href="{% url 'add_product' %}" class="btn btn-o">
+                                <i class="fa-solid fa-plus me-1"></i> Add Listing
+                            </a>
+                            <a href="{% url 'vendor_products' %}" class="btn btn-o">
+                                <i class="fa-solid fa-boxes-stacked me-1"></i> Manage Products
+                            </a>
+                        {% else %}
+                            <a href="{% url 'buyer_dashboard' %}" class="btn btn-p">
+                                <i class="fa-solid fa-gauge me-1"></i> Go to Orders Dashboard
+                            </a>
+                            <a href="{% url 'cart' %}" class="btn btn-o">
+                                <i class="fa-solid fa-cart-shopping me-1"></i> View Cart ({{ cart_count|default:"0" }})
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. LOGOUT CATEGORY -->
+            <div class="tab-pane fade {% if tab == 'logout' %}show active{% endif %}" id="tab-logout" role="tabpanel" aria-labelledby="logout-tab">
+                <div class="panel p-4 p-sm-5 shadow-sm border-0 bg-white text-center">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3 bg-danger-subtle text-danger" style="width: 68px; height: 68px; font-size: 1.8rem;">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    </div>
+                    <h4 class="fw-bold text-dark mb-2">Log Out of UniTrade?</h4>
+                    <p class="text-muted small mb-4" style="max-width: 400px; margin: 0 auto;">
+                        You will be signed out of your account on this device. You can sign back in at any time with your student credentials.
+                    </p>
+                    <form method="post" action="{% url 'logout' %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger px-4 py-2 fw-semibold">
+                            <i class="fa-solid fa-arrow-right-from-bracket me-1"></i> Yes, Log Out Now
+                        </button>
+                    </form>
+                    <button type="button" class="btn btn-o ms-2 px-4 py-2" onclick="document.getElementById('details-tab').click();">
+                        Stay Logged In
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+{% endblock %}

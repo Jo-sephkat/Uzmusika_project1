@@ -1,65 +1,107 @@
+{% extends 'Emarket/base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Your Cart</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <div class="container my-5">
-        <h2>Your Cart</h2>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
-            <!--<tbody>
-                {% for item in cart_items %}
-                <tr>
-                    <td>{{ item.product.name }}</td>
-                    <td>{{ item.quantity }}</td>
-                    <td>${{ item.product.price }}</td>
-                    <td>${{ item.total_price }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>-->
-            <tbody>
-                {% for item in cart_items %}
-                <tr>
-                    <td>{{ item.product.name }}</td>
-                    <td>
-                        <form method="post" action="{% url 'update_cart_item' item.product.id %}" class="d-flex align-items-center">
-                            {% csrf_token %}
-                            <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="form-control form-control-sm" style="width: 70px;">
-                            <button type="submit" class="btn btn-sm btn-primary ms-2">Update</button>
-                        </form>
-                    </td>
-                    <td>${{ item.product.price }}</td>
-                    <td>${{ item.total_price }}</td>
-                    <td>
-                        <form method="post" action="{% url 'remove_cart_item' item.product.id %}">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-sm btn-danger">Remove</button>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <div class="text-end">
-            <h4>Gross Total: ${{ gross_total }}</h4>
+
+{% block title %}Your Cart — UniTrade{% endblock %}
+
+{% block content %}
+<section class="sec">
+    <div class="wrap" style="max-width: 820px;">
+        <div class="rule"></div>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="mb-0">
+                <i class="fa-solid fa-cart-shopping me-2 text-success"></i>Your cart
+            </h2>
+            {% if cart_items %}
+                <span class="badge bg-success-subtle text-success fs-6 px-3 py-2 rounded-pill">
+                    {{ total_items_count }} item{{ total_items_count|pluralize }}
+                </span>
+            {% endif %}
         </div>
-        <div class="d-flex justify-content-end gap-2">
-            <a href="{% url 'product_list' %}" class="btn btn-primary">Continue Shopping</a>
-            <a href="{% url 'make_purchase' %}" class="btn btn-success">Make Purchase</a>
-        </div>
+
+        {% if cart_items %}
+            <div class="d-flex flex-column gap-3 mb-4">
+                {% for item in cart_items %}
+                    <div class="panel d-flex align-items-center gap-3 p-3 flex-wrap">
+                        <div class="thumb rounded-2 flex-shrink-0" style="width: 75px; height: 75px; font-size: 1.8rem;">
+                            {% if item.product.image %}
+                                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-100 h-100 object-fit-cover rounded-2">
+                            {% else %}
+                                <span>{{ item.product.display_icon }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="flex-grow-1" style="min-width: 180px;">
+                            <div class="ctitle mb-1">
+                                <a href="{% url 'product_detail' item.product.id %}" class="text-dark text-decoration-none">
+                                    {{ item.product.name }}
+                                </a>
+                            </div>
+                            <div class="cseller mb-0">
+                                <i class="fa-solid fa-store me-1 text-muted small"></i>{{ item.product.vendor.display_name }} · {{ item.product.effective_university }}
+                            </div>
+                        </div>
+
+                        <!-- Quantity control -->
+                        <div class="d-flex align-items-center gap-1">
+                            <form method="post" action="{% url 'update_cart_item' item.product.id %}" class="d-inline m-0">
+                                {% csrf_token %}
+                                <input type="hidden" name="change" value="-1">
+                                <button type="submit" class="btn btn-sm btn-outline-secondary px-2 py-1" title="Decrease quantity">
+                                    <i class="fa-solid fa-minus small"></i>
+                                </button>
+                            </form>
+                            <span class="fw-bold px-2">{{ item.quantity }}</span>
+                            <form method="post" action="{% url 'update_cart_item' item.product.id %}" class="d-inline m-0">
+                                {% csrf_token %}
+                                <input type="hidden" name="change" value="1">
+                                <button type="submit" class="btn btn-sm btn-outline-secondary px-2 py-1" title="Increase quantity">
+                                    <i class="fa-solid fa-plus small"></i>
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="cprice mb-0 text-end" style="min-width: 85px;">
+                            US${{ item.total_price }}
+                        </div>
+
+                        <!-- Remove button -->
+                        <form method="post" action="{% url 'remove_cart_item' item.product.id %}" class="d-inline m-0">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-danger-o px-2 py-1" title="Remove item">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </form>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Order Total & Checkout button -->
+            <div class="panel d-flex justify-content-between align-items-center p-4">
+                <div>
+                    <div style="font-size: .85rem; color: var(--g500);">Total Order Amount</div>
+                    <div class="cprice fs-3 mb-0">US${{ gross_total }}</div>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="{% url 'product_list' %}" class="btn btn-o">
+                        <i class="fa-solid fa-arrow-left me-1"></i> Continue Shopping
+                    </a>
+                    <a href="{% url 'make_purchase' %}" class="btn btn-p btn-lg">
+                        <i class="fa-solid fa-shield-halved me-1"></i> Proceed to checkout
+                    </a>
+                </div>
+            </div>
+        {% else %}
+            <div class="panel text-center py-5">
+                <div class="mb-3 text-muted" style="font-size: 3.5rem;">
+                    <i class="fa-solid fa-cart-arrow-down"></i>
+                </div>
+                <h3>Your cart is currently empty</h3>
+                <p class="text-muted mt-2 mb-4">Discover textbooks, gadgets, and services listed by students on campus.</p>
+                <a href="{% url 'product_list' %}" class="btn btn-p">
+                    <i class="fa-solid fa-store me-1"></i> Browse the marketplace
+                </a>
+            </div>
+        {% endif %}
     </div>
-</body>
-</html>
-
-
-
+</section>
+{% endblock %}

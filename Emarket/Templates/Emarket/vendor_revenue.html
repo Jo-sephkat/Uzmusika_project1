@@ -1,0 +1,360 @@
+{% extends 'Emarket/base.html' %}
+{% load static %}
+
+{% block title %}Revenue & Sales Analytics — UniTrade{% endblock %}
+
+{% block content %}
+<section class="sec">
+    <div class="wrap">
+        <div class="rule"></div>
+        <div class="sec-h d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+            <div>
+                <h2><i class="fa-solid fa-chart-line me-2 text-success"></i>Revenue & Financial Analytics</h2>
+                <p class="text-muted small mt-1">Track store income, customer payment pipelines, and campus sales performance</p>
+            </div>
+            <div class="d-flex gap-2 flex-wrap">
+                <a href="{% url 'vendor_dashboard' %}" class="btn btn-o">
+                    <i class="fa-solid fa-arrow-left me-1"></i> Vendor Dashboard
+                </a>
+                <a href="{% url 'add_product' %}" class="btn btn-p">
+                    <i class="fa-solid fa-plus-circle me-1"></i> Add new listing
+                </a>
+            </div>
+        </div>
+
+        <!-- High-level Metric Cards -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <div class="panel p-4 h-100">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-muted small">Total Revenue Earned</div>
+                            <div class="card-price-text fs-2 mb-0 text-success">US${{ total_sales_revenue|default:"0.00" }}</div>
+                        </div>
+                        <div class="rounded-circle p-3 bg-success-subtle text-success fs-4">
+                            <i class="fa-solid fa-dollar-sign"></i>
+                        </div>
+                    </div>
+                    <div class="small text-muted mt-2 pt-2 border-top">
+                        Confirmed & completed transactions
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="panel p-4 h-100">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-muted small">Pending Pipeline</div>
+                            <div class="card-price-text fs-2 mb-0 text-warning-emphasis">US${{ revenue_pending|default:"0.00" }}</div>
+                        </div>
+                        <div class="rounded-circle p-3 bg-warning-subtle text-warning-emphasis fs-4">
+                            <i class="fa-solid fa-hourglass-half"></i>
+                        </div>
+                    </div>
+                    <div class="small text-muted mt-2 pt-2 border-top">
+                        {{ pending_orders_count }} order{{ pending_orders_count|pluralize }} awaiting confirmation
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="panel p-4 h-100">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-muted small">Successful Sales</div>
+                            <div class="card-price-text fs-2 mb-0 text-primary">{{ total_sales_count }}</div>
+                        </div>
+                        <div class="rounded-circle p-3 bg-info-subtle text-info-emphasis fs-4">
+                            <i class="fa-solid fa-trophy"></i>
+                        </div>
+                    </div>
+                    <div class="small text-muted mt-2 pt-2 border-top">
+                        Across {{ total_products }} active listings
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Navigation Pills (Revenue Summary, Order Pipeline, Sales Performance) -->
+        <ul class="nav nav-pills profile-nav-pills mb-4 p-1 bg-white rounded-3 shadow-sm border" id="revenueTab" role="tablist">
+            <li class="nav-item flex-fill" role="presentation">
+                <button class="nav-link w-100 text-center fw-semibold {% if tab == 'summary' %}active{% endif %}" id="summary-tab" data-bs-toggle="pill" data-bs-target="#tab-summary" type="button" role="tab">
+                    <i class="fa-solid fa-chart-pie me-1 text-success"></i> Revenue Summary
+                </button>
+            </li>
+            <li class="nav-item flex-fill" role="presentation">
+                <button class="nav-link w-100 text-center fw-semibold {% if tab == 'pipeline' %}active{% endif %}" id="pipeline-tab" data-bs-toggle="pill" data-bs-target="#tab-pipeline" type="button" role="tab">
+                    <i class="fa-solid fa-hourglass-half me-1 text-warning"></i> Order Pipeline
+                </button>
+            </li>
+            <li class="nav-item flex-fill" role="presentation">
+                <button class="nav-link w-100 text-center fw-semibold {% if tab == 'performance' %}active{% endif %}" id="performance-tab" data-bs-toggle="pill" data-bs-target="#tab-performance" type="button" role="tab">
+                    <i class="fa-solid fa-trophy me-1 text-info"></i> Sales Performance
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="revenueTabContent">
+
+            <!-- 1. REVENUE SUMMARY -->
+            <div class="tab-pane fade {% if tab == 'summary' %}show active{% endif %}" id="tab-summary" role="tabpanel">
+                <div class="row g-4 mb-4">
+                    <div class="col-lg-7">
+                        <div class="panel p-4 shadow-sm bg-white border-0 h-100">
+                            <h5 class="fw-bold mb-3 pb-2 border-bottom text-dark">
+                                <i class="fa-solid fa-money-bill-wave me-2 text-success"></i>Income Breakdown
+                            </h5>
+                            <div class="fin-row py-2 border-bottom">
+                                <span class="text-muted"><i class="fa-solid fa-circle-check text-success me-2"></i>Confirmed Payment Orders</span>
+                                <span class="fw-bold text-success fs-5">US${{ revenue_confirmed|default:"0.00" }}</span>
+                            </div>
+                            <div class="fin-row py-2 border-bottom">
+                                <span class="text-muted"><i class="fa-solid fa-box-archive text-success me-2"></i>Completed & Handed Over</span>
+                                <span class="fw-bold text-success fs-5">US${{ revenue_completed|default:"0.00" }}</span>
+                            </div>
+                            <div class="fin-row py-2 border-bottom">
+                                <span class="text-muted"><i class="fa-solid fa-clock text-warning me-2"></i>Pending Incoming Funds</span>
+                                <span class="fw-bold text-warning-emphasis fs-5">US${{ revenue_pending|default:"0.00" }}</span>
+                            </div>
+                            <div class="fin-row py-2 border-bottom">
+                                <span class="text-muted"><i class="fa-solid fa-ban text-danger me-2"></i>Cancelled Volume</span>
+                                <span class="fw-bold text-danger fs-5">US${{ revenue_cancelled|default:"0.00" }}</span>
+                            </div>
+                            <div class="fin-row pt-3 d-flex justify-content-between align-items-center">
+                                <span class="fw-bold fs-5 text-dark">Total Net Revenue Earned</span>
+                                <span class="fw-bold fs-3 text-success">US${{ total_sales_revenue|default:"0.00" }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-5">
+                        <div class="panel p-4 shadow-sm bg-white border-0 h-100">
+                            <h5 class="fw-bold mb-3 pb-2 border-bottom text-dark">
+                                <i class="fa-solid fa-wallet me-2 text-success"></i>Payment Channels
+                            </h5>
+                            <p class="text-muted small">UniTrade orders processed via campus-ready local payment channels:</p>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2 border-bottom">
+                                    <span><span class="badge bg-success me-2">EcoCash</span>USD Mobile Wallet</span>
+                                    <span class="text-muted small fw-semibold">Instant / Live</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2 border-bottom">
+                                    <span><span class="badge bg-primary me-2">InnBucks</span>US$ Voucher / App</span>
+                                    <span class="text-muted small fw-semibold">Campus booths</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2 border-bottom">
+                                    <span><span class="badge bg-warning text-dark me-2">OneMoney</span>NetOne Wallet</span>
+                                    <span class="text-muted small fw-semibold">Direct Mobile</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2 border-bottom">
+                                    <span><span class="badge bg-secondary me-2">ZIPIT</span>Bank Transfer</span>
+                                    <span class="text-muted small fw-semibold">All Zim Banks</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2 border-0">
+                                    <span><span class="badge bg-dark me-2">Cash</span>Campus Handover</span>
+                                    <span class="text-muted small fw-semibold">In Person</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. ORDER PIPELINE -->
+            <div class="tab-pane fade {% if tab == 'pipeline' %}show active{% endif %}" id="tab-pipeline" role="tabpanel">
+                <div class="panel p-4 shadow-sm bg-white border-0 mb-4">
+                    <h5 class="fw-bold mb-3 pb-2 border-bottom text-dark">
+                        <i class="fa-solid fa-filter-circle-dollar me-2 text-warning"></i>Live Order Status Pipeline
+                    </h5>
+                    
+                    <div class="row g-3 text-center mb-4">
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="p-3 bg-warning-subtle rounded-3 border border-warning-subtle">
+                                <div class="text-warning-emphasis small fw-semibold">Pending</div>
+                                <div class="fs-4 fw-bold text-dark">{{ pending_items|length }} items</div>
+                                <div class="text-muted small">US${{ revenue_pending|default:"0.00" }}</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="p-3 bg-info-subtle rounded-3 border border-info-subtle">
+                                <div class="text-info-emphasis small fw-semibold">Confirmed</div>
+                                <div class="fs-4 fw-bold text-dark">{{ confirmed_items|length }} items</div>
+                                <div class="text-muted small">US${{ revenue_confirmed|default:"0.00" }}</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="p-3 bg-success-subtle rounded-3 border border-success-subtle">
+                                <div class="text-success small fw-semibold">Completed</div>
+                                <div class="fs-4 fw-bold text-dark">{{ completed_items|length }} items</div>
+                                <div class="text-muted small">US${{ revenue_completed|default:"0.00" }}</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="p-3 bg-danger-subtle rounded-3 border border-danger-subtle">
+                                <div class="text-danger small fw-semibold">Cancelled</div>
+                                <div class="fs-4 fw-bold text-dark">{{ cancelled_items|length }} items</div>
+                                <div class="text-muted small">US${{ revenue_cancelled|default:"0.00" }}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h6 class="fw-bold mb-3 text-dark">Order Items In Pipeline</h6>
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Order Reference</th>
+                                    <th>Date</th>
+                                    <th>Product</th>
+                                    <th>Customer</th>
+                                    <th>Payment</th>
+                                    <th>Item Total</th>
+                                    <th>Pipeline Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in vendor_order_items %}
+                                    <tr>
+                                        <td class="fw-semibold">#{{ item.order.order_reference|default:item.order.id }}</td>
+                                        <td class="small text-muted">{{ item.order.date_ordered|date:"M d, Y" }}</td>
+                                        <td>
+                                            <div class="fw-semibold">{{ item.product.name }}</div>
+                                            <div class="small text-muted">Qty: {{ item.quantity }} × US${{ item.price }}</div>
+                                        </td>
+                                        <td>
+                                            <div class="small fw-semibold">{{ item.order.buyer.get_full_name|default:item.order.buyer.username }}</div>
+                                            <div class="small text-muted">{{ item.order.payment_number|default:item.order.buyer.email }}</div>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-light text-dark border">{{ item.order.get_payment_method_display }}</span>
+                                        </td>
+                                        <td class="fw-bold text-success">US${{ item.total_price }}</td>
+                                        <td>
+                                            {% if item.order.status == 'Pending' %}
+                                                <span class="badge bg-warning text-dark"><i class="fa-solid fa-hourglass-start me-1"></i>Pending</span>
+                                            {% elif item.order.status == 'Confirmed' %}
+                                                <span class="badge bg-info text-dark"><i class="fa-solid fa-check me-1"></i>Confirmed</span>
+                                            {% elif item.order.status == 'Completed' %}
+                                                <span class="badge bg-success"><i class="fa-solid fa-circle-check me-1"></i>Completed</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">{{ item.order.status }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if item.order.status == 'Pending' %}
+                                                <form method="post" action="{% url 'update_order_status' item.order.id %}" class="d-inline">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="status" value="Confirmed">
+                                                    <button type="submit" class="btn btn-sm btn-success py-1 px-2" title="Confirm Order">
+                                                        <i class="fa-solid fa-check"></i>
+                                                    </button>
+                                                </form>
+                                            {% elif item.order.status == 'Confirmed' %}
+                                                <form method="post" action="{% url 'update_order_status' item.order.id %}" class="d-inline">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="status" value="Completed">
+                                                    <button type="submit" class="btn btn-sm btn-primary py-1 px-2" title="Mark as Done">
+                                                        <i class="fa-solid fa-box"></i>
+                                                    </button>
+                                                </form>
+                                            {% else %}
+                                                <span class="text-muted small">—</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="8" class="text-center py-4 text-muted">
+                                            No pipeline orders recorded yet.
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. SALES PERFORMANCE -->
+            <div class="tab-pane fade {% if tab == 'performance' %}show active{% endif %}" id="tab-performance" role="tabpanel">
+                <div class="row g-4 mb-4">
+                    <div class="col-md-4">
+                        <div class="panel p-4 shadow-sm bg-white border-0 text-center">
+                            <div class="text-muted small mb-1">Completed Sales Transactions</div>
+                            <div class="fs-2 fw-bold text-success">{{ total_sales_count }}</div>
+                            <p class="text-muted small mb-0 mt-2">Delivered to student buyers</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="panel p-4 shadow-sm bg-white border-0 text-center">
+                            <div class="text-muted small mb-1">Active Store Listings</div>
+                            <div class="fs-2 fw-bold text-dark">{{ total_products }}</div>
+                            <p class="text-muted small mb-0 mt-2">Currently available on marketplace</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="panel p-4 shadow-sm bg-white border-0 text-center">
+                            <div class="text-muted small mb-1">Total Inventory Valuation</div>
+                            <div class="fs-2 fw-bold text-primary">US${{ total_value|default:"0.00" }}</div>
+                            <p class="text-muted small mb-0 mt-2">Combined listed asset value</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel p-4 shadow-sm bg-white border-0">
+                    <h5 class="fw-bold mb-3 pb-2 border-bottom text-dark">
+                        <i class="fa-solid fa-list-check me-2 text-info"></i>Product Performance Breakdown
+                    </h5>
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Category</th>
+                                    <th>Campus</th>
+                                    <th>Price</th>
+                                    <th>Status</th>
+                                    <th>Manage</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for p in products %}
+                                    <tr>
+                                        <td>
+                                            <div class="fw-bold">{{ p.name }}</div>
+                                            <div class="text-muted small">{{ p.condition }}</div>
+                                        </td>
+                                        <td><span class="badge bg-light text-dark border">{{ p.category }}</span></td>
+                                        <td class="small">{{ p.effective_university }}</td>
+                                        <td class="fw-bold text-success">US${{ p.price }}</td>
+                                        <td>
+                                            {% if p.is_available %}
+                                                <span class="badge bg-success-subtle text-success border border-success-subtle">Active Listing</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">Sold Out</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'edit_product' p.id %}" class="btn btn-sm btn-o py-1 px-2">
+                                                <i class="fa-solid fa-pen-to-square me-1"></i> Edit
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="6" class="text-center py-4 text-muted">
+                                            No active products in inventory.
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /tab-content -->
+    </div>
+</section>
+{% endblock %}

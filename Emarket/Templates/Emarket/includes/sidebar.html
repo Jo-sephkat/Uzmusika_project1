@@ -1,0 +1,50 @@
+{% load static %}
+<!-- Marketplace & Filter Sidebar Component -->
+<aside class="panel p-3 mb-4">
+    <!-- Search Box -->
+    <h6 class="fw-bold text-dark mb-2">
+        <i class="fa-solid fa-magnifying-glass text-success me-1"></i> Search Listings
+    </h6>
+    <form method="get" action="{% url 'product_list' %}" class="mb-4">
+        {% if selected_category %}<input type="hidden" name="cat" value="{{ selected_category }}">{% endif %}
+        {% if selected_uni %}<input type="hidden" name="uni" value="{{ selected_uni }}">{% endif %}
+        <div class="input-group input-group-sm">
+            <input type="text" name="search" value="{{ search_query|default:'' }}" placeholder="Keyword..." class="form-control">
+            <button type="submit" class="btn btn-p btn-sm">Search</button>
+        </div>
+    </form>
+
+    <!-- Campus Universities -->
+    <h6 class="fw-bold text-dark mb-2">
+        <i class="fa-solid fa-building-columns text-success me-1"></i> Campus
+    </h6>
+    <div class="d-flex flex-column gap-1 mb-4">
+        <a href="{% url 'product_list' %}{% if selected_category %}?cat={{ selected_category|urlencode }}{% endif %}" 
+           class="p-2 rounded text-decoration-none small {% if not selected_uni %}fw-bold text-white bg-success{% else %}text-secondary hover-bg-light{% endif %}">
+            All Campuses
+        </a>
+        {% for u in universities %}
+            <a href="{% url 'product_list' %}?uni={{ u|urlencode }}{% if selected_category %}&cat={{ selected_category|urlencode }}{% endif %}" 
+               class="p-2 rounded text-decoration-none small {% if selected_uni == u %}fw-bold text-white bg-success{% else %}text-secondary hover-bg-light{% endif %}">
+                {{ u }}
+            </a>
+        {% endfor %}
+    </div>
+
+    <!-- Categories -->
+    <h6 class="fw-bold text-dark mb-2">
+        <i class="fa-solid fa-layer-group text-success me-1"></i> Categories
+    </h6>
+    <div class="d-flex flex-column gap-1 mb-2">
+        <a href="{% url 'product_list' %}{% if selected_uni %}?uni={{ selected_uni|urlencode }}{% endif %}" 
+           class="p-2 rounded text-decoration-none small {% if not selected_category %}fw-bold text-white bg-success{% else %}text-secondary hover-bg-light{% endif %}">
+            All Categories
+        </a>
+        {% for cat in category_data %}
+            <a href="{% url 'product_list' %}?cat={{ cat.name|urlencode }}{% if selected_uni %}&uni={{ selected_uni|urlencode }}{% endif %}" 
+               class="p-2 rounded text-decoration-none small d-flex justify-content-between align-items-center {% if selected_category == cat.name %}fw-bold text-white bg-success{% else %}text-secondary hover-bg-light{% endif %}">
+                <span>{{ cat.icon }} {{ cat.name }}</span>
+            </a>
+        {% endfor %}
+    </div>
+</aside>

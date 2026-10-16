@@ -1,19 +1,138 @@
-<!-- filepath: c:\Users\HP\Desktop\UZMARKET\ECOMMERCE\Emarket\Templates\Emarket\product_detail.html -->
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{{ product.name }}</title>
-</head>
-<body>
-    <h1>{{ product.name }}</h1>
-    {% if product.image %}
-        <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-width: 300px; max-height: 300px;">
-    {% else %}
-        <p>No image available</p>
-    {% endif %}
-    <p><strong>Price:</strong> ${{ product.price }}</p>
-    <p><strong>Description:</strong> {{ product.description }}</p>
-    <p><strong>Category:</strong> {{ product.category }}</p>
-    <a href="{% url 'product_list' %}">Back to Product List</a>
-</body>
-</html>
+{% extends 'Emarket/base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} — UniTrade{% endblock %}
+
+{% block content %}
+<section class="sec">
+    <div class="wrap">
+        <div class="row g-4 align-items-start mb-5">
+            <!-- Product Image / Icon Column -->
+            <div class="col-lg-6">
+                <div class="thumb rounded-3 shadow-sm" style="height: 380px; font-size: 5.5rem;">
+                    <span class="tag">{{ product.category }}</span>
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-100 h-100 object-fit-cover rounded-3">
+                    {% else %}
+                        <span>{{ product.display_icon }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Product Details Column -->
+            <div class="col-lg-6">
+                <div class="ps-lg-3">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">
+                            {{ product.condition }} Condition
+                        </span>
+                        <span class="badge bg-light text-dark border px-2 py-1">
+                            <i class="fa-solid fa-building-columns me-1 text-muted"></i>{{ product.effective_university }}
+                        </span>
+                    </div>
+
+                    <h1 class="h2 fw-bold text-dark mb-2">{{ product.name }}</h1>
+                    
+                    <div class="cseller fs-6 mb-3">
+                        <i class="fa-solid fa-user-check text-success me-1"></i> Seller: <strong>{{ product.vendor.display_name }}</strong>
+                        <span class="text-muted ms-2">· Listed {{ product.date_added|timesince }} ago</span>
+                    </div>
+
+                    <div class="cprice fs-1 mb-3">
+                        US${{ product.price }}
+                    </div>
+
+                    <div class="panel p-3 mb-4 bg-white border">
+                        <h6 class="fw-bold text-muted text-uppercase mb-2" style="font-size: .75rem; letter-spacing: .5px;">Item Description</h6>
+                        <p class="mb-0 text-secondary" style="line-height: 1.65; white-space: pre-line;">{{ product.description }}</p>
+                    </div>
+
+                    <div class="d-flex gap-3 align-items-center flex-wrap">
+                        <form method="post" action="{% url 'add_to_cart' product.id %}" class="ajax-cart-form d-inline m-0">
+                            {% csrf_token %}
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="qty">
+                                    <button type="button" class="qty-btn" data-action="decrease">-</button>
+                                    <input type="number" name="quantity" value="1" min="1" style="width: 45px;">
+                                    <button type="button" class="qty-btn" data-action="increase">+</button>
+                                </div>
+                                <button type="submit" class="btn btn-p btn-lg">
+                                    <i class="fa-solid fa-cart-plus me-1"></i> Add to cart
+                                </button>
+                            </div>
+                        </form>
+
+                        <form method="post" action="{% url 'add_to_cart' product.id %}" class="d-inline m-0">
+                            {% csrf_token %}
+                            <input type="hidden" name="quantity" value="1">
+                            <input type="hidden" name="next" value="make_purchase">
+                            <button type="submit" class="btn btn-c btn-lg">
+                                <i class="fa-solid fa-bolt me-1"></i> Buy now
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="mt-4 p-3 bg-light rounded-3 d-flex align-items-center gap-3 border">
+                        <i class="fa-solid fa-shield-halved text-success fs-3"></i>
+                        <div class="small text-muted">
+                            <strong>UniTrade Campus Protection:</strong> Pay safely using EcoCash, InnBucks, OneMoney, or ZIPIT and inspect the item during physical on-campus handover.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Listings -->
+        {% if related_products %}
+            <div class="pt-4 border-top">
+                <div class="sec-h">
+                    <div>
+                        <div class="rule"></div>
+                        <h3>More in {{ product.category }}</h3>
+                    </div>
+                    <a href="{% url 'product_list' %}?cat={{ product.category|urlencode }}" class="btn btn-sm btn-o">
+                        View all <i class="fa-solid fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+
+                <div class="row g-3">
+                    {% for p in related_products %}
+                        <div class="col-12 col-sm-6 col-lg-3">
+                            <div class="card-product h-100">
+                                <div class="card-product-thumb">
+                                    {% if p.image %}
+                                        <img src="{{ p.image.url }}" alt="{{ p.name }}">
+                                    {% else %}
+                                        <span>{{ p.display_icon }}</span>
+                                    {% endif %}
+                                </div>
+                                <div class="card-product-body">
+                                    <div class="card-cat-header">
+                                        <span class="card-cat-title">{{ p.category }}</span>
+                                        <span class="card-cond-tag">{{ p.condition }}</span>
+                                    </div>
+                                    <div class="card-prod-name">
+                                        <a href="{% url 'product_detail' p.id %}" class="text-dark text-decoration-none">{{ p.name }}</a>
+                                    </div>
+                                    <div class="card-seller-line">{{ p.vendor.display_name }} · {{ p.effective_university }}</div>
+                                    <div class="card-action-row">
+                                        <div class="card-price-text">US${{ p.price }}</div>
+                                        <div class="d-flex gap-1">
+                                            <a href="{% url 'product_detail' p.id %}" class="btn btn-sm btn-o">View</a>
+                                            <form method="post" action="{% url 'add_to_cart' p.id %}" class="ajax-cart-form d-inline m-0">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="quantity" value="1">
+                                                <button type="submit" class="btn-card-add">Add to cart</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

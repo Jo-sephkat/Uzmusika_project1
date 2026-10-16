@@ -1,0 +1,157 @@
+{% extends 'Emarket/base.html' %}
+{% load static %}
+
+{% block title %}Name & Account Settings — UniTrade{% endblock %}
+
+{% block content %}
+<section class="sec">
+    <div class="wrap" style="max-width: 680px;">
+        <div class="rule"></div>
+        
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <div>
+                <h2 class="mb-1"><i class="fa-solid fa-gear me-2 text-success"></i>Name & Account Settings</h2>
+                <p class="text-muted small mb-0">Manage your identity, campus details, contact numbers, and login credentials</p>
+            </div>
+            <div>
+                {% if profile.role == 'vendor' %}
+                    <a href="{% url 'vendor_profile' %}" class="btn btn-sm btn-o">
+                        <i class="fa-solid fa-id-card me-1"></i> Seller Info
+                    </a>
+                    <a href="{% url 'vendor_dashboard' %}" class="btn btn-sm btn-p ms-1">
+                        <i class="fa-solid fa-chart-line me-1"></i> Dashboard
+                    </a>
+                {% else %}
+                    <a href="{% url 'buyer_profile' %}" class="btn btn-sm btn-o">
+                        <i class="fa-solid fa-id-card me-1"></i> Customer Info
+                    </a>
+                    <a href="{% url 'buyer_dashboard' %}" class="btn btn-sm btn-p ms-1">
+                        <i class="fa-solid fa-gauge me-1"></i> Dashboard
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Account Summary Banner -->
+        <div class="panel p-4 mb-4 shadow-sm border-0 bg-white">
+            <div class="d-flex align-items-center gap-3">
+                <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm" style="width: 64px; height: 64px; font-size: 1.6rem; background: var(--champ); color: var(--ink); flex-shrink: 0;">
+                    {{ user.first_name|slice:":1"|default:user.username|slice:":1"|upper }}
+                </div>
+                <div class="overflow-hidden flex-grow-1">
+                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <h4 class="fw-bold mb-0 text-dark">{{ user.get_full_name|default:user.username }}</h4>
+                        {% if profile.role == 'vendor' %}
+                            <span class="badge" style="background: var(--ink); color: var(--champ); font-size: .75rem;">
+                                <i class="fa-solid fa-store me-1"></i>Verified Seller
+                            </span>
+                        {% else %}
+                            <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size: .75rem;">
+                                <i class="fa-solid fa-user me-1"></i>Campus Buyer
+                            </span>
+                        {% endif %}
+                    </div>
+                    <div class="text-muted small mt-1">
+                        <span>@{{ user.username }}</span> · <span>{{ user.email }}</span>
+                    </div>
+                    <div class="text-muted small mt-1">
+                        <i class="fa-solid fa-building-columns me-1 text-success"></i>{{ profile.university }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Form -->
+        <div class="panel p-4 p-sm-5 shadow-sm border-0 bg-white">
+            <form method="post" action="{% url 'account_settings' %}">
+                {% csrf_token %}
+                
+                <h5 class="fw-bold mb-3 pb-2 border-bottom">
+                    <i class="fa-solid fa-user-pen me-2 text-success"></i>User Information & Name Settings
+                </h5>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6 field mb-0">
+                        <label class="fw-semibold">First Name</label>
+                        <input type="text" name="first_name" value="{{ user.first_name }}" placeholder="First name" required class="form-control">
+                    </div>
+                    <div class="col-md-6 field mb-0">
+                        <label class="fw-semibold">Last Name</label>
+                        <input type="text" name="last_name" value="{{ user.last_name }}" placeholder="Last name" required class="form-control">
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6 field mb-0">
+                        <label class="fw-semibold">Username <small class="text-muted fw-normal">(read-only)</small></label>
+                        <input type="text" value="{{ user.username }}" readonly class="form-control bg-light text-muted">
+                    </div>
+                    <div class="col-md-6 field mb-0">
+                        <label class="fw-semibold">Student Email</label>
+                        <input type="email" name="email" value="{{ user.email }}" required class="form-control">
+                    </div>
+                </div>
+
+                {% if profile.role == 'vendor' %}
+                    <div class="field mb-3">
+                        <label class="fw-semibold">Store / Business Display Name</label>
+                        <input type="text" name="store_name" value="{{ profile.store_name|default:'' }}" placeholder="e.g. Tariro's Campus Bookshop" class="form-control">
+                        <small class="text-muted">This store name appears on your marketplace product listings.</small>
+                    </div>
+                {% endif %}
+
+                <div class="field mb-3">
+                    <label class="fw-semibold">Campus University</label>
+                    <select name="university" required class="form-select">
+                        {% for u in universities %}
+                            <option value="{{ u }}" {% if profile.university == u %}selected{% endif %}>{{ u }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="field mb-3">
+                    <label class="fw-semibold">Phone / WhatsApp / EcoCash Number</label>
+                    <input type="text" name="phone" value="{{ profile.phone|default:'' }}" placeholder="e.g. 077 123 4567" class="form-control">
+                    <small class="text-muted">Used for direct buyer-seller campus order confirmation & WhatsApp coordination.</small>
+                </div>
+
+                <div class="field mb-4">
+                    <label class="fw-semibold">Hostel / Campus Pickup Address</label>
+                    <textarea name="address" rows="3" placeholder="e.g. Complex 3, Room 42, Mount Pleasant Campus" class="form-control">{{ profile.address|default:'' }}</textarea>
+                </div>
+
+                <h5 class="fw-bold mb-3 pb-2 border-bottom pt-3">
+                    <i class="fa-solid fa-lock me-2 text-success"></i>Security & Password
+                </h5>
+                <p class="text-muted small mb-3">Leave blank if you do not wish to change your password.</p>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6 field mb-0">
+                        <label class="fw-semibold">New Password</label>
+                        <input type="password" name="new_password" placeholder="••••••••" class="form-control">
+                    </div>
+                    <div class="col-md-6 field mb-0">
+                        <label class="fw-semibold">Confirm New Password</label>
+                        <input type="password" name="confirm_password" placeholder="••••••••" class="form-control">
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 pt-2">
+                    <button type="submit" class="btn btn-p flex-grow-1 py-2 fw-bold">
+                        <i class="fa-solid fa-floppy-disk me-1"></i> Save Account Settings
+                    </button>
+                    {% if profile.role == 'vendor' %}
+                        <a href="{% url 'vendor_profile' %}" class="btn btn-o">
+                            Cancel
+                        </a>
+                    {% else %}
+                        <a href="{% url 'buyer_profile' %}" class="btn btn-o">
+                            Cancel
+                        </a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

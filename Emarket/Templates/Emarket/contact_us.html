@@ -1,17 +1,38 @@
 {% extends 'Emarket/base.html' %}
-{% block content %}
-<h1>Contact Us</h1>
-<form method="POST">
-    {% csrf_token %}
-    <input type="text" name="name" placeholder="Your Name" required>
-    <input type="email" name="email" placeholder="Email" required>
-    <textarea name="message" placeholder="Message"></textarea>
-    <button type="submit">Send</button>
-</form>
-{% if messages %}
-    {% for message in messages %}
-        <div class="alert alert-success">{{ message }}</div>
-    {% endfor %}
-{% endif %}
-{% endblock %}
+{% load static %}
 
+{% block title %}Contact Us — UniTrade{% endblock %}
+
+{% block content %}
+<section class="sec">
+    <div class="wrap" style="max-width: 520px;">
+        <div class="rule"></div>
+        <h2 class="mb-3"><i class="fa-solid fa-envelope me-2 text-success"></i>Contact Us</h2>
+        <p class="text-muted small mb-4">Have questions about student selling, safety, or campus partnerships? Send our campus team a message.</p>
+
+        <div class="panel p-4 p-sm-5 shadow-sm">
+            <form method="post" action="{% url 'contact_us' %}">
+                {% csrf_token %}
+                <div class="field mb-3">
+                    <label>Your Name</label>
+                    <input type="text" name="name" placeholder="e.g. Farai" required>
+                </div>
+
+                <div class="field mb-3">
+                    <label>Your Student Email</label>
+                    <input type="email" name="email" placeholder="you@university.ac.zw" required>
+                </div>
+
+                <div class="field mb-4">
+                    <label>Message</label>
+                    <textarea name="message" rows="4" placeholder="How can we help you?" required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-p w-100 py-2 fw-bold">
+                    <i class="fa-solid fa-paper-plane me-1"></i> Send message
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
