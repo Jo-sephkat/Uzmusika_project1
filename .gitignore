@@ -1,0 +1,155 @@
+# ==============================================================================
+# Git Ignore Configuration for Django E-Commerce Platform (UniTrade / Uzmusika)
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. SECURITY & SENSITIVE CREDENTIALS (NEVER COMMIT TO VERSION CONTROL)
+# ------------------------------------------------------------------------------
+# Environment configuration & secrets
+.env
+.env.*
+!.env.example
+*.env
+local_settings.py
+secrets.json
+
+# API Keys, Private Certificates, and TLS/SSL Keys
+*.pem
+*.key
+*.cert
+*.crt
+*.pfx
+*.p12
+*.csr
+*.der
+*.keystore
+
+# Service accounts & OAuth credential files
+credentials.json
+client_secret*.json
+service-account*.json
+firebase-adminsdk*.json
+google-credentials*.json
+*.gpg
+*.asc
+
+# ------------------------------------------------------------------------------
+# 2. LOCAL DATABASES & DUMPS
+# ------------------------------------------------------------------------------
+*.sqlite3
+*.sqlite3-journal
+*.db
+db.sqlite3
+*.sql
+*.dump
+
+# ------------------------------------------------------------------------------
+# 3. DJANGO RUNTIME, MEDIA UPLOADS & STATIC ARTIFACTS
+# ------------------------------------------------------------------------------
+# User-uploaded media files (keep .gitkeep if placeholder needed)
+media/
+!media/.gitkeep
+mediafiles/
+
+# Collected static files for production deployment
+staticfiles/
+
+# ------------------------------------------------------------------------------
+# 4. PYTHON BYTECODE & CACHES
+# ------------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# ------------------------------------------------------------------------------
+# 5. VIRTUAL ENVIRONMENTS
+# ------------------------------------------------------------------------------
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# ------------------------------------------------------------------------------
+# 6. LOGS & RUNTIME DATA
+# ------------------------------------------------------------------------------
+*.log
+pip-log.txt
+pip-delete-this-directory.txt
+celerybeat-schedule
+celerybeat.pid
+
+# ------------------------------------------------------------------------------
+# 7. TESTING, CODE ANALYSIS & COVERAGE
+# ------------------------------------------------------------------------------
+.cache
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+
+# ------------------------------------------------------------------------------
+# 8. DEPLOYMENT & CLOUD PLATFORMS (Vercel, Docker, etc.)
+# ------------------------------------------------------------------------------
+.vercel
+.serverless/
+.terraform/
+*.tfstate
+*.tfstate.*
+
+# ------------------------------------------------------------------------------
+# 9. IDE, EDITORS & OPERATING SYSTEM ARTIFACTS
+# ------------------------------------------------------------------------------
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# PyCharm / IntelliJ
+.idea/
+
+# Editors
+*.swp
+*.swo
+*~
+*.bak
+
+# OS generated
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+[Dd]esktop.ini
