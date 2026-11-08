@@ -20,7 +20,7 @@ def home(request):
     category_data = []
     for cat_name, _ in CATEGORIES:
         count = Product.objects.filter(category=cat_name, is_available=True).count()
-        icon = CATEGORY_ICONS.get(cat_name, '📦')
+        icon = CATEGORY_ICONS.get(cat_name, 'fa-solid fa-box')
         category_data.append({
             'name': cat_name,
             'icon': icon,
@@ -67,7 +67,7 @@ def product_list(request):
 
     unis = [u[0] for u in UNIVERSITIES]
     category_data = [
-        {'name': c[0], 'icon': CATEGORY_ICONS.get(c[0], '📦')}
+        {'name': c[0], 'icon': CATEGORY_ICONS.get(c[0], 'fa-solid fa-box')}
         for c in CATEGORIES
     ]
 
@@ -86,7 +86,7 @@ def category_list(request):
     category_data = []
     for cat_name, _ in CATEGORIES:
         count = Product.objects.filter(category=cat_name, is_available=True).count()
-        icon = CATEGORY_ICONS.get(cat_name, '📦')
+        icon = CATEGORY_ICONS.get(cat_name, 'fa-solid fa-box')
         category_data.append({
             'name': cat_name,
             'icon': icon,
@@ -97,7 +97,7 @@ def category_list(request):
 
 def category_products(request, category_name):
     products = Product.objects.filter(category__iexact=category_name, is_available=True).select_related('vendor', 'vendor__user').order_by('-date_added')
-    icon = CATEGORY_ICONS.get(category_name, '📦')
+    icon = CATEGORY_ICONS.get(category_name, 'fa-solid fa-box')
     return render(request, 'Emarket/category_products.html', {
         'products': products,
         'category_name': category_name,
@@ -506,7 +506,7 @@ def add_product(request):
         category = request.POST.get('category', 'Textbooks')
         condition = request.POST.get('condition', 'Used')
         university = request.POST.get('university') or profile.university
-        icon = request.POST.get('icon', CATEGORY_ICONS.get(category, '📦'))
+        icon = request.POST.get('icon', CATEGORY_ICONS.get(category, 'fa-solid fa-box'))
         image = request.FILES.get('image')
 
         if name and price:

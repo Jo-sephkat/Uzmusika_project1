@@ -1,25 +1,39 @@
-{% extends 'Emarket/base.html' %}
-{% load static %}
-
-{% block title %}Categories — UniTrade{% endblock %}
-
-{% block content %}
+{% extends 'Emarket/base.html' %} {% load static %} {% block title %}Categories
+— UniTrade{% endblock %} {% block content %}
 <section class="sec">
-    <div class="wrap">
-        <div class="rule"></div>
-        <h2 class="mb-4"><i class="fa-solid fa-layer-group me-2 text-success"></i>Categories</h2>
-        <p class="text-muted mb-4">Explore items and student services categorized for university life:</p>
+  <div class="wrap">
+    <div class="rule"></div>
+    <h2 class="mb-4">
+      <i class="fa-solid fa-layer-group me-2 text-success"></i>Categories
+    </h2>
+    <p class="text-muted mb-4">
+      Explore items and student services categorized for university life:
+    </p>
 
-        <div class="grid">
-            {% for cat in categories %}
-                <a href="{% url 'product_list' %}?cat={{ cat.name|urlencode }}" class="card p-4 align-items-start text-decoration-none">
-                    <div style="font-size: 2.2rem; margin-bottom: .8rem;">{{ cat.icon }}</div>
-                    <div class="ctitle fs-5 mb-1">{{ cat.name }}</div>
-                    <div class="cseller text-muted mb-3">{{ cat.count }} listing{{ cat.count|pluralize }}</div>
-                    <span class="btn btn-sm btn-o mt-auto">Browse category <i class="fa-solid fa-arrow-right ms-1"></i></span>
-                </a>
-            {% endfor %}
-        </div>
+    <div class="row g-3 mt-2">
+      {% for cat in categories %}
+      <div class="col-12 col-sm-6 col-lg-3">
+        <a
+          href="{% url 'product_list' %}?cat={{ cat.name|urlencode }}"
+          class="card p-4 align-items-start text-decoration-none h-100"
+        >
+          <div
+            style="font-size: 2.2rem; margin-bottom: 0.8rem; color: var(--ink)"
+          >
+            <i class="{{ cat.icon }}"></i>
+          </div>
+          <div class="ctitle fs-5 mb-1">{{ cat.name }}</div>
+          <div class="cseller text-muted mb-3">
+            {{ cat.count }} listing{{ cat.count|pluralize }}
+          </div>
+          <span class="btn btn-sm btn-o mt-auto"
+            >Browse category <i class="fa-solid fa-arrow-right ms-1"></i
+          ></span>
+        </a>
+      </div>
+      {% endfor %}
     </div>
+  </div>
 </section>
 {% endblock %}
+

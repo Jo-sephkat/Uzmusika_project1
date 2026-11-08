@@ -26,7 +26,7 @@
                             {% if item.product.image %}
                                 <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-100 h-100 object-fit-cover rounded-2">
                             {% else %}
-                                <span>{{ item.product.display_icon }}</span>
+                                <span><i class="{{ item.product.display_icon }}"></i></span>
                             {% endif %}
                         </div>
 

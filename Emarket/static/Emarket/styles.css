@@ -1207,3 +1207,202 @@ footer a:hover {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
+
+/* ---------- 14. Pinterest-Inspired Layout & Structure (Preserving Brand Colors) ---------- */
+
+/* Trust Bar / Value Props Grid */
+.trust-bar {
+  background: #fff;
+  border-top: 1px solid var(--g200);
+  border-bottom: 1px solid var(--g200);
+  padding: 22px 0;
+}
+
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.trust-icon-circle {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border-radius: var(--r-pill);
+  background: var(--ink-s);
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+}
+
+.trust-title {
+  font-size: .92rem;
+  font-weight: 700;
+  color: var(--black);
+  margin-bottom: 2px;
+}
+
+.trust-desc {
+  font-size: .78rem;
+  color: var(--g500);
+  margin: 0;
+}
+
+/* Category Circular Discs */
+.cat-circle-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  group: hover;
+  transition: transform .2s ease;
+}
+
+.cat-circle-card:hover {
+  transform: translateY(-4px);
+}
+
+.cat-circle-disc {
+  width: 96px;
+  height: 96px;
+  border-radius: var(--r-pill);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.3rem;
+  margin-bottom: 12px;
+  transition: transform .25s ease, box-shadow .25s ease;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .05);
+  border: 2px solid #fff;
+}
+
+.cat-circle-card:hover .cat-circle-disc {
+  transform: scale(1.06);
+  box-shadow: 0 8px 22px rgba(6, 78, 59, .15);
+}
+
+.cat-circle-name {
+  font-size: .88rem;
+  font-weight: 700;
+  color: var(--black);
+  text-align: center;
+  margin-bottom: 2px;
+}
+
+.cat-circle-count {
+  font-size: .75rem;
+  color: var(--g500);
+}
+
+/* Category Soft Tint Backgrounds */
+.disc-cream { background: var(--bg-cream); }
+.disc-green { background: var(--ink-s); }
+.disc-champ { background: var(--champ); }
+.disc-lavender { background: #f3e8ff; }
+.disc-blue { background: #e0f2fe; }
+.disc-peach { background: #ffedd5; }
+
+/* Promotional / Campus Campaign Banner */
+.promo-campaign-banner {
+  background: linear-gradient(135deg, var(--bg-cream) 0%, #f4eee2 100%);
+  border-radius: var(--r-xl);
+  padding: 44px 48px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--champ-b);
+}
+
+.promo-badge {
+  display: inline-block;
+  background: var(--champ);
+  color: var(--ink);
+  font-size: .75rem;
+  font-weight: 800;
+  letter-spacing: .8px;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: var(--r-pill);
+  margin-bottom: 12px;
+}
+
+.promo-title {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: var(--black);
+  letter-spacing: -.02em;
+  margin-bottom: 10px;
+}
+
+.promo-desc {
+  font-size: .95rem;
+  color: var(--g600);
+  max-width: 480px;
+  margin-bottom: 24px;
+}
+
+.promo-tag-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--ink);
+  color: #fff;
+  font-weight: 800;
+  padding: 10px 20px;
+  border-radius: var(--r-pill);
+  box-shadow: 0 6px 18px rgba(6, 78, 59, .25);
+  font-size: 1.1rem;
+}
+
+/* Testimonial Cards */
+.testimonial-card {
+  background: #fff;
+  border: 1px solid var(--g200);
+  border-radius: var(--r-l);
+  padding: 24px;
+  box-shadow: var(--sh-s);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.testimonial-quote-badge {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--r-pill);
+  background: var(--ink-s);
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .85rem;
+  margin-bottom: 14px;
+}
+
+.testimonial-text {
+  font-size: .9rem;
+  line-height: 1.6;
+  color: var(--g700);
+  margin-bottom: 18px;
+}
+
+.testimonial-author-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--r-pill);
+  background: var(--champ);
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: .9rem;
+}
+
+.stars-gold {
+  color: #f59e0b;
+  font-size: .75rem;
+  letter-spacing: 2px;
+}

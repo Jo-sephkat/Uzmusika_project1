@@ -4,56 +4,55 @@
 {% block title %}UniTrade — The Student Marketplace for Zimbabwean Campuses{% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
+<!-- Hero Section (Pinterest Structure) -->
 <section class="hero-cream">
     <div class="wrap">
         <div class="row align-items-center g-5">
-            <!-- Left Column: Copy & Stats -->
+            <!-- Left Column: Copy & CTAs -->
             <div class="col-lg-6">
-                <span class="hero-eyebrow">Student Marketplace · Zimbabwe</span>
+                <span class="hero-eyebrow">
+                    <i class="fa-solid fa-circle-check text-success me-1"></i> Campus Marketplace · Zimbabwe
+                </span>
                 <h1 class="hero-heading">
-                    Everything<br>
-                    students sell,<br>
-                    <span class="hero-accent">in one campus<br>market.</span>
+                    Discover The Best<br>
+                    Student Deals<br>
+                    <span class="hero-accent">Across Campuses.</span>
                 </h1>
 
                 <p class="hero-desc">
-                    List a side hustle in minutes. Buyers pay with the wallets they already use — EcoCash, InnBucks, OneMoney and ZIPIT.
+                    The student-to-student marketplace. Buy what you need, sell what you don't — and settle with EcoCash, InnBucks, OneMoney, ZIPIT or campus hand-over.
                 </p>
 
-                <div class="d-flex gap-3 flex-wrap align-items-center mb-2">
+                <div class="d-flex gap-3 flex-wrap align-items-center mb-4">
                     <a href="{% url 'product_list' %}" class="btn-hero-primary">
-                        Browse the marketplace <i class="fa-solid fa-arrow-right small ms-1"></i>
+                        Shop Now <i class="fa-solid fa-arrow-right small ms-1"></i>
                     </a>
                     <a href="{% url 'add_product' %}" class="btn-hero-secondary">
-                        Start selling
+                        Start Selling
                     </a>
                 </div>
 
-                <!-- Stats Row -->
-                <div class="hero-stats">
-                    <div>
-                        <div class="hero-stat-num">{{ total_unis|default:"6" }}</div>
-                        <div class="hero-stat-lbl">Universities</div>
+                <!-- Trusted by students avatar row (Pinterest layout) -->
+                <div class="d-flex align-items-center gap-3 pt-3 border-top border-light-subtle">
+                    <div class="d-flex">
+                        <span class="rounded-circle d-inline-flex align-items-center justify-content-center text-white fw-bold shadow-sm" style="width:34px;height:34px;background:var(--ink);border:2px solid #fff;margin-right:-8px;">T</span>
+                        <span class="rounded-circle d-inline-flex align-items-center justify-content-center text-dark fw-bold shadow-sm" style="width:34px;height:34px;background:var(--champ);border:2px solid #fff;margin-right:-8px;">N</span>
+                        <span class="rounded-circle d-inline-flex align-items-center justify-content-center text-white fw-bold shadow-sm" style="width:34px;height:34px;background:#475569;border:2px solid #fff;margin-right:-8px;">K</span>
+                        <span class="rounded-circle d-inline-flex align-items-center justify-content-center text-white fw-bold shadow-sm" style="width:34px;height:34px;background:#0d9488;border:2px solid #fff;">C</span>
                     </div>
-                    <div>
-                        <div class="hero-stat-num">1.2k</div>
-                        <div class="hero-stat-lbl">Active listings</div>
-                    </div>
-                    <div>
-                        <div class="hero-stat-num">4</div>
-                        <div class="hero-stat-lbl">Local payment options</div>
+                    <div class="small text-muted fw-semibold">
+                        Trusted by <span class="text-dark fw-bold">1,200+</span> Zimbabwean students
                     </div>
                 </div>
             </div>
 
-            <!-- Right Column: Hero Image & Floating Badge -->
+            <!-- Right Column: Hero Graphic / Image Display -->
             <div class="col-lg-6">
                 <div class="hero-image-wrap">
-                    <img src="{% static 'Emarket/images/campus_students_hero.jpg' %}" alt="Students on campus exchanging textbooks">
+                    <img src="{% static 'Emarket/images/campus_students_hero.jpg' %}" alt="Students trading on campus">
 
                     <div class="hero-floating-badge">
-                        <div class="badge-green-sub">COLLECTED TODAY</div>
+                        <div class="badge-green-sub"><i class="fa-solid fa-bolt text-warning me-1"></i> COLLECTED TODAY</div>
                         <div class="badge-location">Mount Pleasant · 14 hand-overs</div>
                     </div>
                 </div>
@@ -62,30 +61,83 @@
     </div>
 </section>
 
-<!-- How UniTrade works -->
-{% include 'Emarket/includes/how_it_works.html' %}
+<!-- Trust Bar / Value Proposition Grid (From Pinterest layout) -->
+<section class="trust-bar">
+    <div class="wrap">
+        <div class="row g-4 align-items-center">
+            <div class="col-6 col-lg-3">
+                <div class="trust-item">
+                    <div class="trust-icon-circle">
+                        <i class="fa-solid fa-handshake-simple"></i>
+                    </div>
+                    <div>
+                        <div class="trust-title">Campus Hand-over</div>
+                        <p class="trust-desc">Safe pickup at public campus spots</p>
+                    </div>
+                </div>
+            </div>
 
-<!-- Shop by category -->
+            <div class="col-6 col-lg-3">
+                <div class="trust-item">
+                    <div class="trust-icon-circle">
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
+                    <div>
+                        <div class="trust-title">Local Payments</div>
+                        <p class="trust-desc">EcoCash, InnBucks, OneMoney, ZIPIT</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <div class="trust-item">
+                    <div class="trust-icon-circle">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <div>
+                        <div class="trust-title">Student Hustle</div>
+                        <p class="trust-desc">Peer-to-peer affordable pricing</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg-3">
+                <div class="trust-item">
+                    <div class="trust-icon-circle">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div>
+                        <div class="trust-title">Verified Profiles</div>
+                        <p class="trust-desc">Student sellers & peer reviews</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Shop by Category (Circular Discs layout from Pinterest) -->
 <section class="sec">
     <div class="wrap">
         <div class="sec-h">
             <div>
                 <div class="rule"></div>
-                <h2>Shop by category</h2>
+                <h2 class="fw-bold mb-1">Shop by Categories</h2>
             </div>
             <a href="{% url 'category_list' %}" class="sec-link">
-                See all categories
+                View All Categories <i class="fa-solid fa-arrow-right small ms-1"></i>
             </a>
         </div>
 
-        <div class="row g-4">
+        <div class="row g-4 justify-content-center">
             {% for cat in category_data %}
-                <div class="col-sm-6 col-lg-4">
-                    <a href="{% url 'product_list' %}?cat={{ cat.name|urlencode }}"
-                       class="card-product text-decoration-none p-4 h-100">
-                        <div class="fs-2 mb-3">{{ cat.icon }}</div>
-                        <div class="hw-card-title fs-5 mb-1">{{ cat.name }}</div>
-                        <div class="card-seller-line mb-0">{{ cat.count }} listing{{ cat.count|pluralize }}</div>
+                <div class="col-4 col-sm-4 col-md-2">
+                    <a href="{% url 'product_list' %}?cat={{ cat.name|urlencode }}" class="cat-circle-card">
+                        <div class="cat-circle-disc {% cycle 'disc-cream' 'disc-green' 'disc-champ' 'disc-lavender' 'disc-blue' 'disc-peach' %}">
+                            <i class="{{ cat.icon }}"></i>
+                        </div>
+                        <div class="cat-circle-name">{{ cat.name }}</div>
+                        <div class="cat-circle-count">{{ cat.count }} item{{ cat.count|pluralize }}</div>
                     </a>
                 </div>
             {% endfor %}
@@ -93,16 +145,16 @@
     </div>
 </section>
 
-<!-- Fresh on campus -->
+<!-- Best Selling Products Grid (Pinterest layout) -->
 <section class="sec bg-white border-top border-bottom">
     <div class="wrap">
         <div class="sec-h">
             <div>
                 <div class="rule"></div>
-                <h2>Fresh on campus</h2>
+                <h2 class="fw-bold mb-1">Best Selling Products</h2>
             </div>
             <a href="{% url 'product_list' %}" class="sec-link">
-                View all listings →
+                View All Products <i class="fa-solid fa-arrow-right small ms-1"></i>
             </a>
         </div>
 
@@ -113,21 +165,125 @@
                 </div>
             {% empty %}
                 <div class="col-12">
-                    <div class="empty">No listings posted yet. Be the first to start selling!</div>
+                    <div class="empty">No student listings posted yet. Be the first to start selling!</div>
                 </div>
             {% endfor %}
         </div>
     </div>
 </section>
 
-<!-- Payments Banner -->
-{% include 'Emarket/includes/payments_banner.html' %}
+<!-- Campus Special Offer Banner (Pinterest Promo Section) -->
+<section class="sec">
+    <div class="wrap">
+        <div class="promo-campaign-banner">
+            <div class="row align-items-center g-4">
+                <div class="col-lg-7">
+                    <span class="promo-badge">Campus Clearance</span>
+                    <h2 class="promo-title">Save Up to 50% Off<br>Student Gear & Books</h2>
+                    <p class="promo-desc">
+                        Graduating students and peers are clearing textbooks, electronics, and dorm living essentials at student-friendly rates.
+                    </p>
+                    <div class="d-flex gap-3 flex-wrap align-items-center">
+                        <a href="{% url 'product_list' %}" class="btn-hero-primary">
+                            Explore Deals <i class="fa-solid fa-arrow-right small ms-1"></i>
+                        </a>
+                        <a href="{% url 'add_product' %}" class="btn-hero-secondary">
+                            Sell Your Items
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-5 text-center text-lg-end">
+                    <div class="d-inline-flex flex-column align-items-center bg-white p-4 rounded-4 shadow-sm border border-light-subtle">
+                        <div class="fs-1 mb-2">🏷️</div>
+                        <div class="promo-tag-pill mb-2">
+                            <i class="fa-solid fa-tag"></i> 50% OFF
+                        </div>
+                        <div class="text-muted small">Campus Hand-overs Daily</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- What Students Say (Testimonials Section from Pinterest) -->
+<section class="sec bg-white border-top border-bottom">
+    <div class="wrap">
+        <div class="text-center mb-5">
+            <div class="rule mx-auto"></div>
+            <h2 class="fw-bold">What Our Students Say</h2>
+            <p class="text-muted small">Hear from buyers and student vendors across Zimbabwe</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <div>
+                        <div class="testimonial-quote-badge">
+                            <i class="fa-solid fa-quote-left"></i>
+                        </div>
+                        <p class="testimonial-text">
+                            "Found all my Level 2 engineering textbooks in under 24 hours. Met the senior right outside the library and paid via EcoCash seamlessly."
+                        </p>
+                    </div>
+                    <div class="d-flex align-items-center gap-3 pt-3 border-top">
+                        <div class="testimonial-author-avatar">T</div>
+                        <div>
+                            <div class="fw-bold small text-dark">Tinashe M.</div>
+                            <div class="stars-gold">★★★★★</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <div>
+                        <div class="testimonial-quote-badge">
+                            <i class="fa-solid fa-quote-left"></i>
+                        </div>
+                        <p class="testimonial-text">
+                            "I run a small side hustle selling thrift hoodies on campus. UniTrade gave me my first 30 orders without paying any listing fees!"
+                        </p>
+                    </div>
+                    <div class="d-flex align-items-center gap-3 pt-3 border-top">
+                        <div class="testimonial-author-avatar">R</div>
+                        <div>
+                            <div class="fw-bold small text-dark">Ruvimbo C.</div>
+                            <div class="stars-gold">★★★★★</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <div>
+                        <div class="testimonial-quote-badge">
+                            <i class="fa-solid fa-quote-left"></i>
+                        </div>
+                        <p class="testimonial-text">
+                            "Much safer than random WhatsApp groups. Knowing the seller is a student on the same campus makes trades stress-free."
+                        </p>
+                    </div>
+                    <div class="d-flex align-items-center gap-3 pt-3 border-top">
+                        <div class="testimonial-author-avatar">F</div>
+                        <div>
+                            <div class="fw-bold small text-dark">Farai K.</div>
+                            <div class="stars-gold">★★★★★</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 <!-- Live on these campuses -->
-<section class="sec pt-0">
+<section class="sec">
     <div class="wrap">
         <div class="rule"></div>
-        <h2 class="mb-2">Live on these campuses</h2>
+        <h2 class="mb-2 fw-bold">Live on these campuses</h2>
         <p class="text-muted small mb-4">Filter student listings across Zimbabwean universities:</p>
 
         <div class="chips">

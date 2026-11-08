@@ -1,38 +1,42 @@
-{% extends 'Emarket/base.html' %}
-{% load static %}
-
-{% block title %}{{ category_name }} — UniTrade{% endblock %}
-
-{% block content %}
+{% extends 'Emarket/base.html' %} {% load static %} {% block title %}{{
+category_name }} — UniTrade{% endblock %} {% block content %}
 <section class="sec">
-    <div class="wrap">
-        <div class="rule"></div>
-        <div class="sec-h">
-            <div>
-                <h2><span>{{ category_icon }}</span> {{ category_name }}</h2>
-                <p class="text-muted small mt-1">{{ total_count }} listing{{ total_count|pluralize }} available</p>
-            </div>
-            <a href="{% url 'category_list' %}" class="btn btn-sm btn-o">
-                <i class="fa-solid fa-arrow-left me-1"></i> All categories
-            </a>
-        </div>
-
-        {% if products %}
-            <div class="row g-3 mt-2">
-                {% for product in products %}
-                    <div class="col-12 col-sm-6 col-lg-3">
-                        {% include 'Emarket/includes/product_card.html' %}
-                    </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <div class="panel text-center py-5">
-                <p class="text-muted mb-3">No listings currently available in {{ category_name }}.</p>
-                <a href="{% url 'add_product' %}" class="btn btn-p">
-                    <i class="fa-solid fa-plus-circle me-1"></i> Be the first to list in {{ category_name }}
-                </a>
-            </div>
-        {% endif %}
+  <div class="wrap">
+    <div class="rule"></div>
+    <div class="sec-h">
+      <div>
+        <h2>
+          <i class="{{ category_icon }} text-success me-2"></i>{{ category_name
+          }}
+        </h2>
+        <p class="text-muted small mt-1">
+          {{ total_count }} listing{{ total_count|pluralize }} available
+        </p>
+      </div>
+      <a href="{% url 'category_list' %}" class="btn btn-sm btn-o">
+        <i class="fa-solid fa-arrow-left me-1"></i> All categories
+      </a>
     </div>
+
+    {% if products %}
+    <div class="row g-3 mt-2">
+      {% for product in products %}
+      <div class="col-12 col-sm-6 col-lg-3">
+        {% include 'Emarket/includes/product_card.html' %}
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="panel text-center py-5">
+      <p class="text-muted mb-3">
+        No listings currently available in {{ category_name }}.
+      </p>
+      <a href="{% url 'add_product' %}" class="btn btn-p">
+        <i class="fa-solid fa-plus-circle me-1"></i> Be the first to list in {{
+        category_name }}
+      </a>
+    </div>
+    {% endif %}
+  </div>
 </section>
 {% endblock %}

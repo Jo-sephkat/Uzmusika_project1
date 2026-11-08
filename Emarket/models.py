@@ -21,12 +21,12 @@ CATEGORIES = [
 ]
 
 CATEGORY_ICONS = {
-    "Textbooks": "📚",
-    "Electronics": "💻",
-    "Fashion": "👟",
-    "Room & Living": "🛏️",
-    "Services": "🛠️",
-    "Food & Snacks": "🍱",
+    "Textbooks": "fa-solid fa-book-open",
+    "Electronics": "fa-solid fa-laptop",
+    "Fashion": "fa-solid fa-shirt",
+    "Room & Living": "fa-solid fa-bed",
+    "Services": "fa-solid fa-screwdriver-wrench",
+    "Food & Snacks": "fa-solid fa-utensils",
 }
 
 CONDITIONS = [
@@ -74,7 +74,7 @@ class Product(models.Model):
     name = models.CharField(max_length=255)
     price = models.DecimalField(max_digits=10, decimal_places=2) # US$
     image = models.ImageField(upload_to='product_images/', blank=True, null=True)
-    icon = models.CharField(max_length=10, default='📦')
+    icon = models.CharField(max_length=50, default='fa-solid fa-box')
     description = models.TextField()
     category = models.CharField(max_length=100, choices=CATEGORIES, default='Textbooks')
     condition = models.CharField(max_length=50, choices=CONDITIONS, default='Used')
@@ -88,9 +88,9 @@ class Product(models.Model):
 
     @property
     def display_icon(self):
-        if self.icon and self.icon != '📦':
+        if self.icon and self.icon not in ['📦', 'fa-solid fa-box']:
             return self.icon
-        return CATEGORY_ICONS.get(self.category, '📦')
+        return CATEGORY_ICONS.get(self.category, 'fa-solid fa-box')
 
     def __str__(self):
         return f"{self.name} (US${self.price})"

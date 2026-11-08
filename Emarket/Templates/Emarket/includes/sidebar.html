@@ -43,7 +43,7 @@
         {% for cat in category_data %}
             <a href="{% url 'product_list' %}?cat={{ cat.name|urlencode }}{% if selected_uni %}&uni={{ selected_uni|urlencode }}{% endif %}" 
                class="p-2 rounded text-decoration-none small d-flex justify-content-between align-items-center {% if selected_category == cat.name %}fw-bold text-white bg-success{% else %}text-secondary hover-bg-light{% endif %}">
-                <span>{{ cat.icon }} {{ cat.name }}</span>
+                <span><i class="{{ cat.icon }} me-1"></i> {{ cat.name }}</span>
             </a>
         {% endfor %}
     </div>

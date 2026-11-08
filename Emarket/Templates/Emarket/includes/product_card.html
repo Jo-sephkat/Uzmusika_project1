@@ -5,7 +5,7 @@
         {% if product.image %}
             <img src="{{ product.image.url }}" alt="{{ product.name }}">
         {% else %}
-            <span>{{ product.display_icon }}</span>
+            <span><i class="{{ product.display_icon }}"></i></span>
         {% endif %}
     </div>
 

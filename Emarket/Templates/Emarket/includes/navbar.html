@@ -57,6 +57,16 @@
                             <span class="badge badge-nav-role ms-1">{% if user.profile.role == 'vendor' %}Seller{% else %}Buyer{% endif %}</span>
                         </button>
                         <div class="dropdown-menu dropdown-menu-end shadow-lg profile-dropdown-menu" aria-labelledby="profileDropdown">
+                            {% if user.is_staff or user.is_superuser %}
+                                <!-- System Admin Access -->
+                                <a class="dropdown-item py-2 d-flex align-items-center gap-2 bg-light-subtle text-dark fw-bold border-bottom" href="/admin/" target="_blank">
+                                    <i class="fa-solid fa-shield-halved text-success" style="width: 18px;"></i>
+                                    <div>
+                                        <div class="small">Admin Control Panel</div>
+                                        <div class="text-muted" style="font-size: .7rem; font-weight: normal;">Manage students & listings</div>
+                                    </div>
+                                </a>
+                            {% endif %}
                             <!-- 1. Name / User Details -->
                             <a class="dropdown-item py-2 d-flex align-items-center gap-2" href="{% url 'profile' %}?tab=details">
                                 <i class="fa-solid fa-user text-success" style="width: 18px;"></i>
