@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 import uuid
 
 UNIVERSITIES = [
@@ -144,3 +146,20 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.quantity}x {self.product.name} @ US${self.price}"
+
+
+@receiver(post_save, sender=User)
+def create_or_save_user_profile(sender, instance, created, **kwargs):
+    """Automatically ensure every registered User (including via Google) has a Profile."""
+    if created:
+        Profile.objects.get_or_create(
+            user=instance,
+            defaults={
+                'role': 'buyer',
+                'university': 'University of Zimbabwe',
+                'is_email_confirmed': True,
+            }
+        )
+    else:
+        if hasattr(instance, 'profile'):
+            instance.profile.save()

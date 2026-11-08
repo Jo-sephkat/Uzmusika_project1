@@ -21,7 +21,8 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-     path('', include('Emarket.urls')),  # Ensure this line includes the Emarket app's URLs
+    path('accounts/', include('allauth.urls')),  # Google & social auth routes
+    path('', include('Emarket.urls')),  # Ensure this line includes the Emarket app's URLs
 ]
 
 if settings.DEBUG:
