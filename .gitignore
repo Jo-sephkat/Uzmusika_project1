@@ -153,3 +153,12 @@ htmlcov/
 ehthumbs.db
 Thumbs.db
 [Dd]esktop.ini
+
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Local database
+db.sqlite3
+db.sqlite3-journal
