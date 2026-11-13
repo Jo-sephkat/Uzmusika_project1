@@ -13,12 +13,14 @@ class UniTradeTestCase(TestCase):
             first_name='Test',
             last_name='Student'
         )
-        self.profile = Profile.objects.create(
+        self.profile, _ = Profile.objects.update_or_create(
             user=self.user,
-            role='vendor',
-            store_name="Student Test Store",
-            university='University of Zimbabwe',
-            phone='+263771234567'
+            defaults={
+                'role': 'vendor',
+                'store_name': "Student Test Store",
+                'university': 'University of Zimbabwe',
+                'phone': '+263771234567',
+            }
         )
         self.product = Product.objects.create(
             vendor=self.profile,
@@ -86,13 +88,31 @@ class UniTradeTestCase(TestCase):
 
     def test_buyer_profile_shows_customer_information(self):
         buyer = User.objects.create_user(username='buyer_student', password='password123', email='buyer@uz.ac.zw')
-        Profile.objects.create(user=buyer, role='buyer', university='University of Zimbabwe')
+        Profile.objects.update_or_create(
+            user=buyer,
+            defaults={'role': 'buyer', 'university': 'University of Zimbabwe'}
+        )
         self.client.login(username='buyer_student', password='password123')
         response = self.client.get(reverse('buyer_profile'))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Customer Information')
         self.assertContains(response, 'buyer@uz.ac.zw')
         self.assertContains(response, 'Verified Campus Buyer')
+
+    def test_registration_updates_signal_created_profile(self):
+        response = self.client.post(reverse('register'), {
+            'username': 'new_buyer',
+            'password': 'password123',
+            'email': 'newbuyer@uz.ac.zw',
+            'role': 'buyer',
+            'university': 'University of Zimbabwe',
+        })
+
+        self.assertRedirects(response, reverse('home'))
+        user = User.objects.get(username='new_buyer')
+        self.assertEqual(Profile.objects.filter(user=user).count(), 1)
+        self.assertEqual(user.profile.role, 'buyer')
+        self.assertEqual(user.profile.university, 'University of Zimbabwe')
 
     def test_account_settings_view(self):
         self.client.login(username='test_student', password='password123')

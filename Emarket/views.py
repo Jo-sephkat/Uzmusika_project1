@@ -151,17 +151,19 @@ def register(request):
                 is_active=True
             )
             
-            Profile.objects.create(
+            Profile.objects.update_or_create(
                 user=user,
-                role=role,
-                university=university,
-                store_name=store_name,
-                phone=phone,
-                is_email_confirmed=True
+                defaults={
+                    'role': role,
+                    'university': university,
+                    'store_name': store_name,
+                    'phone': phone,
+                    'is_email_confirmed': True,
+                }
             )
 
             # Auto log in user
-            login(request, user)
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             messages.success(request, f"Welcome to UniTrade, {username}!")
             if role == 'vendor':
                 return redirect('vendor_dashboard')
@@ -458,10 +460,12 @@ def make_purchase(request):
                 first_name=buyer_name or "Campus Student",
                 is_active=True
             )
-            Profile.objects.create(
+            Profile.objects.update_or_create(
                 user=buyer_user,
-                role='buyer',
-                phone=payment_number or buyer_contact
+                defaults={
+                    'role': 'buyer',
+                    'phone': payment_number or buyer_contact,
+                }
             )
 
         # Create Order
