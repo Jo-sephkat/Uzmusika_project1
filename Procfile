@@ -1,1 +1,2 @@
 web: gunicorn --bind :8000 --workers 2 --timeout 60 ECOMMERCE.wsgi:application
+
